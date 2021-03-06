@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Post</title>
+        <link rel="stylesheet" href="styles/common.css">
+        <link rel="stylesheet" href="styles/post_page.css">
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <div id="content_wrapper">
+                <div class="main_block" id="main_title">
+                    <h1>Post: lorem ipsum</h1>
+                </div>
+                <hr>
+                <div class="main_block">
+                    <div id="post_content">
+                        Lorem ipsum dolor sit amet consectetur <b>adipisicing elit</b>. Dicta, voluptatibus. Ullam libero expedita aspernatur nam? Nulla doloremque nihil cumque voluptatum recusandae praesentium totam? Labore ducimus repudiandae porro voluptatem commodi! Officia?
+                        <img src="example.svg">
+                        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+                    </div>
+                </div>
+                <hr>
+                <div class="post_tags_wrapper">
+                    <div class="post_tags">
+                        <div class="post_tag">Cats</div>
+                        <div class="post_tag">Lorem</div>
+                        <div class="post_tag">Funny</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="main_block" id="post_info">
+                    <div class="post_info_author">
+                        <a href="user.html">Admin</a>
+                    </div>
+                    <div class="post_info_right">
+                        <div class="post_info_date">06.03.21 21:48</div>
+                        <div class="post_info_votes">+666</div>
+                        <div class="post_info_downvote" onclick="vote('-')">-</div>
+                        <div class="post_info_upvote" onclick="vote('+')">+</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="main_block" id="comments">
+                    <div id="comments_title">Comments</div>
+                    <div>
+                        Perfect!
+                    </div>
+                </div>
+                <hr>
+                <div class="main_block" id="footer">
+                    <div id="footer_links">
+                        <a href="index.html">Index</a>
+                        |
+                        <a href="sitemap.html">Sitemap</a>
+                    </div>
+                    <div id="footer_about">
+                        Databases coursework<br>
+                        2021
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function vote(x) {
+                alert("Vote " + x)
+            }
+        </script>
+    </body>
+</html>

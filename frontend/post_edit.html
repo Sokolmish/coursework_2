@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Create post</title>
+        <link rel="stylesheet" href="styles/common.css">
+        <link rel="stylesheet" href="styles/post_edit_page.css">
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <div id="content_wrapper">
+                <!--Header-->
+                <div class="main_block" id="main_title">
+                    <h1>Create post</h1>
+                </div>
+                <hr>
+                <!--End header-->
+
+                <!-- Tags -->
+                <div class="main_block">
+                    <div id="tags_input">
+                        <input type="text">
+                        <button>Add tag</button>
+                    </div>
+                    <div id="tags_entered">
+                        <div class="tag_control">
+                            <div class="post_tag">Cats</div>
+                            <span class="tag_delete">X</span>
+                        </div>
+                        <div class="tag_control">
+                            <div class="post_tag">Lorem</div>
+                            <span class="tag_delete">X</span>
+                        </div>
+                        <div class="tag_control">
+                            <div class="post_tag">Funny</div>
+                            <span class="tag_delete">X</span>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <!-- End tags -->
+                
+                <div class="main_block">
+                    <div id="editor_controls">
+                        <button class="edit_control"><b>bold</b></button>
+                        <button class="edit_control"><i>italic</i></button>
+                        <button class="edit_control"><s>strike</s></button>
+                        <button class="edit_control"><u>underline</u></button>
+                        <button class="edit_control" onclick="editor_set_image()">image</button>
+                        <button class="edit_control" onclick="editor_set_link()">link</button>
+                        <!-- <button>code</button>
+                        <button>pre</button> -->
+                        <button id="editor_help_btn" onclick="editor_help()">help</button>
+                    </div>
+                    <div id="editor_text">
+                        <textarea id="editor_textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="main_block">
+                    <div id="editor_deploy">
+                        <button id="deploy_btn">Create post</button>
+                    </div>
+                </div>
+                
+                <!--Footer-->
+                <hr>
+                <div class="main_block" id="footer">
+                    <div id="footer_links">
+                        <a href="index.html">Index</a>
+                        |
+                        <a href="sitemap.html">Sitemap</a>
+                    </div>
+                    <div id="footer_about">
+                        Databases coursework<br>
+                        2021
+                    </div>
+                </div>
+                <!--End footer-->
+
+            </div>
+        </div>
+
+        <script>
+            function editor_help() {
+                alert(
+                    "*italic*\n**bold**\n***bold italic***\n__underline__\n~~strike~~\n" +
+                    "`inline code`\n```code block (like <pre>)```\n" +
+                    "[Link caption](example.com)\n!img(pics.com/myimage.png)"
+                );
+            }
+
+            function insertAtCursor(myField, myValue) {
+                //IE support
+                if (document.selection) {
+                    alert("IEIEIEIEIEIEIE");
+                }
+                //MOZILLA and others
+                else if (myField.selectionStart || myField.selectionStart == '0') {
+                    var startPos = myField.selectionStart;
+                    var endPos = myField.selectionEnd;
+                    myField.value = myField.value.substring(0, startPos)
+                        + myValue
+                        + myField.value.substring(endPos, myField.value.length);
+                } else {
+                    myField.value += myValue;
+                }
+            }
+
+            var __editor_textarea = document.getElementById("editor_textarea");
+
+            function editor_set_link() {
+                insertAtCursor(__editor_textarea, "[your caption](http://example.com) ");
+            }
+
+            function editor_set_image() {
+                insertAtCursor(__editor_textarea, "!img(http://example.com) ");
+            }
+        </script>
+    </body>
+</html>

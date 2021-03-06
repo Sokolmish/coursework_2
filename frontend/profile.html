@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Profile</title>
-        <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="styles/common.css">
     </head>
     <body>
         <div id="main_wrapper">
@@ -18,37 +18,35 @@
                             <li>Username: sokolmish</li>
                             <li>Email: sokolmish@gmail.com</li>
                             <li>Status: admin</li>
-                            <li>Karma: 666</li>
+                            <li>Registration date: 07.03.21</li>
+                            <li>Birthday: 20.09.00</li>
                         </ul>
                     </div>
                 </div>
-                <hr>
                 <div class="main_block">
-                    <h2>Favorites</h2>
-                    <div>
-                        <div>
-                            <h3>Threads</h3>
-                            <ul>
-                                <li>Thread 1</li>
-                                <li>Thread 2</li>
-                                <li>Thread 3</li>
-                                <li>Thread 4</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h3>Comments</h3>
-                            <ul>
-                                <li>Comment I</li>
-                                <li>Comment II</li>
-                                <li>Comment III</li>
-                                <li>Comment IV</li>
-                            </ul>
-                        </div>
+                    <div id="status_block">
+                        Status:
+                        <input type="text">
+                        <button>Set status</button>
+                    </div>
+                    <div id="bio_block">
+                        Bio:<br>
+                        <textarea id="bio_textarea"></textarea>
+                        <br>
+                        <button>Set bio</button>
                     </div>
                 </div>
                 <hr>
                 <div class="main_block" id="footer">
-                    <a href="sitemap.html">Sitemap</a>
+                    <div id="footer_links">
+                        <a href="index.html">Index</a>
+                        |
+                        <a href="sitemap.html">Sitemap</a>
+                    </div>
+                    <div id="footer_about">
+                        Databases coursework<br>
+                        2021
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,7 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>Forum</title>
-        <link rel="stylesheet" href="common.css">
+        <link rel="stylesheet" href="styles/common.css">
+        <link rel="stylesheet" href="styles/main_page.css">
     </head>
     <body>
         <div id="main_wrapper">
@@ -13,45 +14,100 @@
                 </div>
                 <hr>
                 <div class="main_block">
-                    <h2>User</h2>
                     <div>
-                        <ul>
-                            <li>Username: sokolmish</li>
-                            <li>Email: sokolmish@gmail.com</li>
-                            <li>Status: admin</li>
-                            <li>Karma: 666</li>
-                        </ul>
-                    </div>
-                </div>
-                <hr>
-                <div class="main_block">
-                    <h2>Threads</h2>
-                    <div>
-                        <div>
-                            <h3>Group 1</h3>
-                            <ul>
-                                <li>Thread 1</li>
-                                <li>Thread 2</li>
-                                <li>Thread 3</li>
-                                <li>Thread 4</li>
-                            </ul>
+                        <div class="post_wrapper"> <!--Post-->
+                            <div class="post_body">
+                                <div class="post_title"><a href="post.html">Post 1</a></div>
+                                <div class="post_content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit eum modi labore saepe minima in, itaque aliquam laboriosam officia, hic, ipsam quidem nostrum iure quos architecto dolores. Ad, autem!</div>
+                            </div>
+                            <div class="post_tags_wrapper">
+                                <div class="post_tags">
+                                    <div class="post_tag">Cats</div>
+                                    <div class="post_tag">Lorem</div>
+                                    <div class="post_tag">Funny</div>
+                                </div>
+                            </div>
+                            <div class="post_info">
+                                <div class="post_info_author">
+                                    <a href="user.html">Admin</a>
+                                </div>
+                                <div class="post_info_right">
+                                    <div class="post_info_date">06.03.21 21:48</div>
+                                    <div class="post_info_votes">+666</div>
+                                    <div class="post_info_downvote" onclick="vote('-')">-</div>
+                                    <div class="post_info_upvote" onclick="vote('+')">+</div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h3>Group 2</h3>
-                            <ul>
-                                <li>Thread I</li>
-                                <li>Thread II</li>
-                                <li>Thread III</li>
-                                <li>Thread IV</li>
-                            </ul>
+                        <div class="post_wrapper"> <!--Post-->
+                            <div class="post_body">
+                                <div class="post_title"><a href="post.html">Post 2</a></div>
+                                <div class="post_content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit eum modi labore saepe minima in, itaque aliquam laboriosam officia, hic, ipsam quidem nostrum iure quos architecto dolores. Ad, autem!</div>
+                            </div>
+                            <div class="post_tags_wrapper">
+                                <div class="post_tags">
+                                    <div class="post_tag">Cats</div>
+                                    <div class="post_tag">Lorem</div>
+                                    <div class="post_tag">Funny</div>
+                                </div>
+                            </div>
+                            <div class="post_info">
+                                <div class="post_info_author">
+                                    <a href="user.html">Admin</a>
+                                </div>
+                                <div class="post_info_right">
+                                    <div class="post_info_date">06.03.21 21:48</div>
+                                    <div class="post_info_votes">+666</div>
+                                    <div class="post_info_downvote" onclick="vote('-')">-</div>
+                                    <div class="post_info_upvote" onclick="vote('+')">+</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post_wrapper"> <!--Post-->
+                            <div class="post_body">
+                                <div class="post_title"><a href="post.html">Post 3</a></div>
+                                <div class="post_content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit eum modi labore saepe minima in, itaque aliquam laboriosam officia, hic, ipsam quidem nostrum iure quos architecto dolores. Ad, autem!</div>
+                            </div>
+                            <div class="post_tags_wrapper">
+                                <div class="post_tags">
+                                    <div class="post_tag">Cats</div>
+                                    <div class="post_tag">Lorem</div>
+                                    <div class="post_tag">Funny</div>
+                                </div>
+                            </div>
+                            <div class="post_info">
+                                <div class="post_info_author">
+                                    <a href="user.html">Admin</a>
+                                </div>
+                                <div class="post_info_right">
+                                    <div class="post_info_date">06.03.21 21:48</div>
+                                    <div class="post_info_votes">+666</div>
+                                    <div class="post_info_downvote" onclick="vote('-')">-</div>
+                                    <div class="post_info_upvote" onclick="vote('+')">+</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <hr>
                 <div class="main_block" id="footer">
-                    <a href="sitemap.html">Sitemap</a>
+                    <div id="footer_links">
+                        <a href="index.html">Index</a>
+                        |
+                        <a href="sitemap.html">Sitemap</a>
+                    </div>
+                    <div id="footer_about">
+                        Databases coursework<br>
+                        2021
+                    </div>
                 </div>
             </div>
         </div>
+
+        <script>
+            function vote(x) {
+                alert("Vote " + x)
+            }
+        </script>
     </body>
 </html>

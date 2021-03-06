@@ -7,16 +7,25 @@ body {
 #content_wrapper {
     max-width: 1200px;
     min-width: 600px;
-    width: 70%;
+    width: 75%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 0;
-    /* padding: 0px 20px 50px 20px; */
-    border: solid 1px;
+    margin-top: 25px;
+    border: solid #000000 1px;
     background-color: #ffffff;
 }
 
 /* #main_title {} */
 .main_block {
-    margin: 0px 20px 20px 20px;
+    margin: 20px 20px 20px 20px;
 }
+
+#footer_about {
+    margin: 15px auto;
+    width: max-content;
+    text-align: center;
+}
+
+/* #footer_links {
+    text-align: center;
+} */

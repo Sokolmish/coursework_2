@@ -1,0 +1,80 @@
+#editor_text {
+    height: 500px;
+    min-height: 200px;
+    border: 1px solid;
+    resize: vertical;
+    overflow: hidden;
+}
+
+#editor_textarea {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: none;
+    resize: none;
+}
+
+#editor_controls {
+    margin: 10px 0px;
+}
+
+.edit_control {
+    margin-right: 3px;
+    border: solid 1px;
+    padding: 7px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+#editor_help_btn {
+    float: right;
+    border: solid 1px;
+    padding: 7px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+.edit_control:hover {
+    background-color: #fbfbfb;
+}
+
+#editor_help_btn:hover {
+    background-color: #fbfbfb;
+}
+
+#editor_deploy {
+    margin: 10px;
+}
+
+#deploy_btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tags_entered {
+    margin-top: 20px;
+}
+
+.tag_control {
+    display: inline-block;
+    
+}
+
+.post_tag {
+    display: inline-block;
+    background-color: #99cdf8;
+    border: 1px solid #061066;
+    border-radius: 8px;
+    padding: 3px 6px;
+    margin-right: 5px;
+}
+.tag_delete {
+    margin-right: 15px;
+    color: red;
+    border: solid 1px red;
+    padding: 1px 2px;
+}
