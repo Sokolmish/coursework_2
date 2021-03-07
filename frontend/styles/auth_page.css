@@ -1,0 +1,49 @@
+#auth_wrapper {
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#sign_in {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 25px;
+}
+
+#sign_up {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+}
+
+#birth_day {
+    width: 45px;
+}
+
+#birth_month {
+    width: 45px;
+}
+
+#birth_year {
+    width: 60px;
+}
+
+#btn_sign_in {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 18px;
+    width: 130px;
+}
+
+#btn_sign_up {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 18px;
+    width: 130px;
+}
+
+#vert_separator {
+    background-color: #d8b0b0;
+}
