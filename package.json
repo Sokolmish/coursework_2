@@ -1,0 +1,18 @@
+{
+	"type": "module",
+	"name": "coursework_2",
+	"version": "1.0.0",
+	"description": "Coursework on databases",
+	"author": "Mikhail Sokolovskiy <sokolmish@gmail.com>",
+	"homepage": "https://github.com/Sokolmish/coursework_2",
+	"repository": "github:Sokolmish/coursework_2",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.17.1",
+		"body-parser": "^1.19.0"
+	},
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	}
+}
