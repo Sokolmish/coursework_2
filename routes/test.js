@@ -2,9 +2,13 @@ import express from "express"
 
 export var router = express.Router()
 
-router.get("/", (_, response) => {
-    response.json({
-        "Test": 142
-    });
+router.post("/test", (req, res) => {
+    if (req.body.val !== undefined)
+        res.json({
+            "nval": -req.body.val
+        });
+    else
+        res.json({
+            "succ": false
+        });
 });
-

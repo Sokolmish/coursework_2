@@ -4,6 +4,7 @@ import fs from "fs";
 import process from "process";
 import http from "http";
 import express from "express";
+import bodyParser from "body-parser"
 import compression from "compression";
 
 import { router as apiTest } from "./routes/test.js"
@@ -11,6 +12,7 @@ import { router as apiTest } from "./routes/test.js"
 const app = express();
 const server = http.createServer(app);
 
+app.use(bodyParser.json())
 app.use(compression());
 
 // API

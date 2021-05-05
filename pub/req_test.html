@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Requests</title>
+        <link rel="stylesheet" href="styles/common.css">
+    </head>
+    <body>
+        <div id="main_wrapper">
+            <div id="content_wrapper">
+                <div class="main_block" id="main_title">
+                    <h1>Requests testing page</h1>
+                </div>
+                <hr>
+                <div class="main_block">
+                    <span>URL:&nbsp;&nbsp;</span>
+                    <input type="text" id="dest" value="api/auth">
+                    <h4>Params:</h4>
+                    <div id="input"></div>
+                    <button onclick="doRequest()">Send</button>
+                    <div id="response_block">
+                        <h4>Response:</h4>
+                        <textarea class="text_field" id="response_area" style="width: 500px; height: 250px;">{}</textarea>
+                    </div>
+                </div>
+                <hr>
+                <div class="main_block" id="footer">
+                    <div id="footer_links">
+                        <a href="index.html">Index</a>
+                        |
+                        <a href="sitemap.html">Sitemap</a>
+                    </div>
+                    <div id="footer_about">
+                        Databases coursework<br>
+                        2021
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="scripts/util.js"></script>
+        <script src="scripts/req_test.js"></script>
+    </body>
+</html>
