@@ -1,16 +1,10 @@
 version: "3.7"
 
 services:
-    server:
-        image: cwork2_server
-        command: "node server.js"
-        working_dir: /app
-        ports:
-            - 8089:8089
-        volumes:
-            - ./pub:/app/pub
-
-    database:
+    cw2_database:
+        build:
+            context: mysql
+            dockerfile: Dockerfile.database
         image: cwork2_database
         environment:
             MYSQL_DATABASE: cwork2_db
@@ -18,13 +12,39 @@ services:
         env_file:
             - mysql_secret.env
 
-    phpmyadmin:
+
+    cw2_server:
+        build:
+            context: .
+            dockerfile: Dockerfile.server
+        image: cwork2_server
+        working_dir: /app
+        command: "node server.js"
+        volumes:
+            - ./pub:/app/pub
+        depends_on:
+            - cw2_database
+
+
+    cw2_phpmyadmin:
         image: phpmyadmin
-        ports:
-            - 8090:80
-        links:
-            - database
         environment:
-            PMA_HOST: database
-            PMA_PORT: 3306
             PMA_ARBITRARY: 1
+            PMA_HOST: cw2_database
+            PMA_PORT: 3306
+        depends_on:
+            - cw2_database
+
+
+    cw2_nginx:
+        build:
+            context: nginx
+            dockerfile: Dockerfile.nginx
+        image: cwork2_nginx
+        ports:
+            - 8091:80
+        volumes:
+            - ./pub:/app/pub
+        depends_on:
+            - cw2_server
+            - cw2_phpmyadmin
