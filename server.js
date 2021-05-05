@@ -1,6 +1,5 @@
 'use strict'
 
-import fs from "fs";
 import process from "process";
 import http from "http";
 import express from "express";
@@ -18,29 +17,18 @@ app.use(compression());
 // API
 app.use("/api", apiTest);
 
-// Static files
-app.get("/", (_, response) => response.redirect("/index.html"));
-app.use(express.static("./pub"));
-
 // Default routes for GET and POST requests
 app.route("*")
     .get((_, response) => {
-        fs.readFile("./pub/404.html", (err, res) => {
-            response.status(404);
-            if (err)
-                response.send("<h1>404 Not found</h1>");
-            else
-                response.send(res.toString("utf-8"));
-        })
+        response.status(404);
+        response.send("<h1>Unexpected GET request. (404)</h1>");
     })
     .post((_, response) => {
         response.status(404);
-        response.json({
-            success: false,
-            err_cause: "Unknown API method"
-        });
+        response.json({ success: false, err_cause: "Unknown API method" });
     });
 
+// Server
 function startServer() {
     const port = 8089
     server.listen(port, () => {
