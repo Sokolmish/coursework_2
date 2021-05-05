@@ -1,11 +1,30 @@
 version: "3.7"
 
 services:
-    app:
-        image: coursework2
+    server:
+        image: cwork2_server
         command: "node server.js"
         working_dir: /app
         ports:
             - 8089:8089
         volumes:
             - ./pub:/app/pub
+
+    database:
+        image: cwork2_database
+        environment:
+            MYSQL_DATABASE: cwork2_db
+            MYSQL_DB: cwork2_db
+        env_file:
+            - mysql_secret.env
+
+    phpmyadmin:
+        image: phpmyadmin
+        ports:
+            - 8090:80
+        links:
+            - database
+        environment:
+            PMA_HOST: database
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
