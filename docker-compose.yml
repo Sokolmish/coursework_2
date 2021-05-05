@@ -8,10 +8,8 @@ services:
         image: cwork2_database
         environment:
             MYSQL_DATABASE: cwork2_db
-            MYSQL_DB: cwork2_db
         env_file:
             - mysql_secret.env
-
 
     cw2_server:
         build:
@@ -22,9 +20,13 @@ services:
         command: "node server.js"
         volumes:
             - ./pub:/app/pub
+        environment:
+            MYSQL_HOST: cw2_database
+            MYSQL_DATABASE: cwork2_db
+        env_file:
+            - mysql_secret.env
         depends_on:
             - cw2_database
-
 
     cw2_phpmyadmin:
         image: phpmyadmin
@@ -34,7 +36,6 @@ services:
             PMA_PORT: 3306
         depends_on:
             - cw2_database
-
 
     cw2_nginx:
         build:

@@ -6,5 +6,8 @@ COPY package*.json .
 
 RUN npm install
 
+ENV TZ=Europe/Minsk
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 COPY server.js .
 COPY routes/ ./routes

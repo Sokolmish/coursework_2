@@ -4,6 +4,9 @@ RUN apt-get update && \
     apt-get install -y nano && \
     rm -rf /var/lib/apt/lists/*
 
+ENV TZ=Europe/Minsk
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 COPY nginx.conf /etc/nginx/
 
 RUN mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.old

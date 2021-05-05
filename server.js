@@ -5,8 +5,9 @@ import http from "http";
 import express from "express";
 import bodyParser from "body-parser"
 import compression from "compression";
+import mysql from "mysql2"
 
-import { router as apiTest } from "./routes/test.js"
+import { getAuthRouter } from "./routes/auth.js"
 
 const app = express();
 const server = http.createServer(app);
@@ -14,8 +15,16 @@ const server = http.createServer(app);
 app.use(bodyParser.json())
 app.use(compression());
 
+var sqlPool = mysql.createPool({
+    connectionLimit: 5,
+    host: process.env.MYSQL_HOST,
+    user: "root",
+    password: process.env.MYSQL_ROOT_PASSWORD,
+    database: process.env.MYSQL_DATABASE
+});
+
 // API
-app.use("/api", apiTest);
+app.use("/api/auth", getAuthRouter());
 
 // Default routes for GET and POST requests
 app.route("*")

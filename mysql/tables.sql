@@ -1,3 +1,5 @@
+USE cwork2_db;
+
 CREATE TABLE Users (
     user_id int PRIMARY KEY AUTO_INCREMENT,
     username varchar(32) NOT NULL UNIQUE,
