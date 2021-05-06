@@ -1,5 +1,3 @@
-USE cwork2_db;
-
 DELIMITER //
 
 CREATE PROCEDURE CreateUser (
@@ -15,15 +13,17 @@ END;
 -- CALL CreateUser ('delim', 'delim@ya.ru', UNHEX('1234abcd1234abcd'), UNHEX('1234abcd1234abc0')) 
 
 CREATE PROCEDURE Authorize (
-    iusername varchar(32),
-    ipasswd binary(32),
-    isalt binary(32)
+    iuser_id int,
+    iaceess binary(32),
+    irefresh binary(32)
 )
 BEGIN
-    SELECT user_id INTO @user_id FROM Users WHERE username = iusername;
-    INSERT INTO Auth(user_id, salt, passwd) VALUES(@user_id, isalt, ipasswd);
+    INSERT INTO AuthSessions(user_id, access_token, refresh_token, time_grant)
+        VALUES(iuser_id, iaceess, irefresh, time_grant)
+        ON DUPLICATE KEY
+        UPDATE access_token=iaceess, refresh_token=irefresh, time_grant=time_grant;
 END//
--- CALL Authorize ('delim', UNHEX('1234abcd1234abcd'), UNHEX('1234abcd1234abc0')) 
+-- CALL Authorize (4520, UNHEX('1234abcd1234abcd'), UNHEX('1234abcd1234abc0')) 
 
 -- CreatePost
 

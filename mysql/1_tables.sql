@@ -1,9 +1,7 @@
-USE cwork2_db;
-
 CREATE TABLE Users (
     user_id int PRIMARY KEY AUTO_INCREMENT,
-    username varchar(32) NOT NULL UNIQUE,
-    email varchar(320) NOT NULL UNIQUE,
+    username varchar(32) NOT NULL UNIQUE, -- TODO: Empty
+    email varchar(320) NOT NULL UNIQUE, -- TODO: Empty
     date_reg datetime NOT NULL,
     birthday date,
     avatar varchar(32) NOT NULL DEFAULT 'default_avatar.png',
@@ -29,8 +27,8 @@ CREATE TABLE Posts (
 	post_id int PRIMARY KEY AUTO_INCREMENT,
     author int,
     date datetime NOT NULL,
-    title varchar(128) NOT NULL,
-    content text NOT NULL,
+    title varchar(128) NOT NULL, -- TODO: Empty
+    content text NOT NULL, -- TODO: Empty
     upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
     downvotes int NOT NULL DEFAULT 0,
     FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL
@@ -41,7 +39,7 @@ CREATE TABLE Comments (
     author int,
     date datetime NOT NULL,
     post int NOT NULL,
-    content text NOT NULL,
+    content text NOT NULL, -- TODO: Empty
     upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
     downvotes int NOT NULL DEFAULT 0,
     FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL,
