@@ -31,7 +31,7 @@ services:
     cw2_phpmyadmin:
         image: phpmyadmin
         environment:
-            PMA_ARBITRARY: 1
+            PMA_ARBITRARY: 0
             PMA_HOST: cw2_database
             PMA_PORT: 3306
         depends_on:

@@ -24,7 +24,7 @@ var sqlPool = mysql.createPool({
 });
 
 // API
-app.use("/api/auth", getAuthRouter());
+app.use("/api/auth", getAuthRouter(sqlPool));
 
 // Default routes for GET and POST requests
 app.route("*")

@@ -31,7 +31,7 @@ CREATE TABLE Posts (
     date datetime NOT NULL,
     title varchar(128) NOT NULL,
     content text NOT NULL,
-    upvotes int NOT NULL DEFAULT 0,
+    upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
     downvotes int NOT NULL DEFAULT 0,
     FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL
 );
@@ -42,7 +42,7 @@ CREATE TABLE Comments (
     date datetime NOT NULL,
     post int NOT NULL,
     content text NOT NULL,
-    upvotes int NOT NULL DEFAULT 0,
+    upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
     downvotes int NOT NULL DEFAULT 0,
     FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL,
     FOREIGN KEY(post) REFERENCES Posts(post_id) ON DELETE CASCADE
