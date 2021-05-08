@@ -13,57 +13,8 @@
                     <h1>Forum</h1>
                 </div>
                 <hr>
-                <div class="main_block">
-                    <div>
-                        <div class="post_wrapper"> <!--Post-->
-                            <div class="post_body">
-                                <div class="post_title"><a href="post.html">Post 1</a></div>
-                                <div class="post_content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit eum modi labore saepe minima in, itaque aliquam laboriosam officia, hic, ipsam quidem nostrum iure quos architecto dolores. Ad, autem!</div>
-                            </div>
-                            <div class="post_tags_wrapper">
-                                <div class="post_tags">
-                                    <div class="post_tag">Cats</div>
-                                    <div class="post_tag">Lorem</div>
-                                    <div class="post_tag">Funny</div>
-                                </div>
-                            </div>
-                            <div class="post_info">
-                                <div class="post_info_author">
-                                    <a href="user.html">Admin</a>
-                                </div>
-                                <div class="post_info_right">
-                                    <div class="post_info_date">06.03.21 21:48</div>
-                                    <div class="post_info_votes">+666</div>
-                                    <div class="post_info_downvote" onclick="vote('-')">-</div>
-                                    <div class="post_info_upvote" onclick="vote('+')">+</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post_wrapper"> <!--Post-->
-                            <div class="post_body">
-                                <div class="post_title"><a href="post.html">Post 2</a></div>
-                                <div class="post_content">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum impedit eum modi labore saepe minima in, itaque aliquam laboriosam officia, hic, ipsam quidem nostrum iure quos architecto dolores. Ad, autem!</div>
-                            </div>
-                            <div class="post_tags_wrapper">
-                                <div class="post_tags">
-                                    <div class="post_tag">Cats</div>
-                                    <div class="post_tag">Lorem</div>
-                                    <div class="post_tag">Funny</div>
-                                </div>
-                            </div>
-                            <div class="post_info">
-                                <div class="post_info_author">
-                                    <a href="user.html">Admin</a>
-                                </div>
-                                <div class="post_info_right">
-                                    <div class="post_info_date">06.03.21 21:48</div>
-                                    <div class="post_info_votes">+666</div>
-                                    <div class="post_info_downvote" onclick="vote('-')">-</div>
-                                    <div class="post_info_upvote" onclick="vote('+')">+</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="posts_block" class="main_block">
+                    <div id="loading_label">loading...</div>
                 </div>
                 <hr>
                 <div class="main_block" id="footer">
@@ -80,6 +31,10 @@
             </div>
         </div>
 
+        <script src="scripts/mustache.min.js"></script>
+        <script src="scripts/markdownit.min.js"></script>
+        <script src="scripts/util.js"></script>
+        <script src="scripts/posts.js"></script>
         <script src="scripts/votes.js"></script>
     </body>
 </html>

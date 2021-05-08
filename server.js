@@ -8,6 +8,7 @@ import compression from "compression";
 import mysql from "mysql2"
 
 import { getAuthRouter } from "./routes/auth.js"
+import { getPostsRouter } from "./routes/posts.js"
 
 const app = express();
 const server = http.createServer(app);
@@ -25,6 +26,7 @@ var sqlPool = mysql.createPool({
 
 // API
 app.use("/api/auth", getAuthRouter(sqlPool));
+app.use("/api/posts", getPostsRouter(sqlPool));
 
 // Default routes for GET and POST requests
 app.route("*")

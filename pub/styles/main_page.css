@@ -111,3 +111,7 @@
     color: #313131;
     text-decoration: none;
 }
+
+.post_content {
+    white-space: pre;
+}

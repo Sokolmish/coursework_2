@@ -9,7 +9,7 @@ const PBKDF2_LENGTH = 32;
 const ACCESS_EXPIRE = 180 * 6e4; // minutes to milliseconds
 const REFRESH_EXPIRE = (24 * 30) * 3.6e6; // hours to milliseconds
 
-async function checkAccess(sqlPool, user_id, token) {
+async function checkAuth(sqlPool, user_id, token) {
     const query = "SELECT user_id, access_token, time_grant FROM AuthSessions WHERE user_id = ?";
     const [row, _] = await sqlPool.promise().query(query, [ user_id ]);
     // TODO: empty row
@@ -46,7 +46,7 @@ function getAuthRouter(sqlPool) {
         return { accessToken, refreshToken };
     }
 
-    var router = express.Router()
+    var router = express.Router();
 
     // API: sign up
     router.post("/signup", async (req, res) => {
@@ -174,7 +174,7 @@ function getAuthRouter(sqlPool) {
         }
         // TODO: empty fields
         try {
-            if (await checkAccess(sqlPool, req.body.user_id, req.body.access_token)) {
+            if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
                 res.json({ success: true });
                 return;
             }
@@ -191,4 +191,4 @@ function getAuthRouter(sqlPool) {
     return router;
 }
 
-export { getAuthRouter, checkAccess };
+export { getAuthRouter, checkAuth };

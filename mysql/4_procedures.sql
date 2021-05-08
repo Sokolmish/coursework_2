@@ -23,6 +23,14 @@ BEGIN
         UPDATE access_token=iaceess, refresh_token=irefresh, time_grant=CURRENT_TIMESTAMP;
 END//
 
--- CreatePost
+CREATE PROCEDURE CreatePost (
+    iuser_id int,
+    ititle varchar(128),
+    icontent text
+)
+BEGIN
+    INSERT INTO Posts(author, `date`, title, content)
+        VALUES(iuser_id, CURRENT_TIMESTAMP, ititle, icontent);
+END//
 
 -- CreateComment

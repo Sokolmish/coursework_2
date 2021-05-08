@@ -26,10 +26,6 @@
                             <span class="tag_delete">X</span>
                         </div>
                         <div class="tag_control">
-                            <div class="post_tag">Lorem</div>
-                            <span class="tag_delete">X</span>
-                        </div>
-                        <div class="tag_control">
                             <div class="post_tag">Funny</div>
                             <span class="tag_delete">X</span>
                         </div>
@@ -37,7 +33,9 @@
                 </div>
                 <hr>
                 <!-- End tags -->
-                
+                <div class="main_block">
+                    <input id="title_input" type="text">
+                </div>
                 <div class="main_block">
                     <div id="editor_controls">
                         <button class="edit_control" onclick="editor_set_braces('*')"><b>bold</b></button>
@@ -55,7 +53,7 @@
 
                 <div class="main_block">
                     <div id="editor_deploy">
-                        <button id="deploy_btn">Create post</button>
+                        <button id="deploy_btn" onclick="createPost()">Create post</button>
                     </div>
                 </div>
                 
@@ -76,7 +74,7 @@
 
             </div>
         </div>
-
+        <script src="scripts/util.js"></script>
         <script src="scripts/post_editor.js"></script>
     </body>
 </html>
