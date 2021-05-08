@@ -7,6 +7,7 @@ const ApiErrCodes = Object.freeze({
     ALREADY_EXISTS: 3,
     NOT_EXISTS: 4,
     ACCESS_DENIED: 5,
+    EXPIRED: 6,
 });
 
 function checkFields(obj, fields) {
