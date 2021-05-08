@@ -31,6 +31,12 @@ function getAuthRouter(sqlPool) {
         return rows.length > 0;
     }
 
+    async function isEmailExists(email) {
+        const query = "SELECT email FROM Users WHERE email = ?";
+        const [rows, _] = await sqlPool.promise().query(query, [ email ]);
+        return rows.length > 0;
+    }
+
     async function authorizeUser(userId) {
         const accessToken = crypto.randomBytes(32);
         const refreshToken = crypto.randomBytes(32);
@@ -52,11 +58,20 @@ function getAuthRouter(sqlPool) {
         try {
             if (await isUserExists(req.body.username)) {
                 res.json({
-                    success: false, err_code: ApiErrCodes.ALREADY_EXISTS, err: "User already exists"
+                    success: false,
+                    err_code: ApiErrCodes.ALREADY_EXISTS,
+                    err: "Username already exists"
                 });
                 return;
             }
-            // TODO: check email
+            if (await isEmailExists(req.body.email)) {
+                res.json({
+                    success: false,
+                    err_code: ApiErrCodes.ALREADY_EXISTS,
+                    err: "Email already exists"
+                });
+                return;
+            }
             const saltHex = crypto.randomBytes(32).toString("hex");
             const pwdHash =
                 crypto.pbkdf2Sync(req.body.passwd, saltHex, PBKDF2_ITERS, PBKDF2_LENGTH, "sha256");
@@ -77,12 +92,13 @@ function getAuthRouter(sqlPool) {
             return;
         }
         try {
-            if (!await isUserExists(req.body.username)) {
+            if (!await isEmailExists(req.body.email)) {
                 res.json({
                     success: false, err_code: ApiErrCodes.NOT_EXISTS, err: "User doesn't exists"
                 });
                 return;
             }
+            // TODO: empty fields
             const query = "SELECT user_id, email, passwd, salt FROM UsersAuthView WHERE email = ?";
             const [rows, _] = await sqlPool.promise().query(query, [ req.body.email ]);
             const userId = rows[0].user_id;
@@ -114,6 +130,7 @@ function getAuthRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
+        // TODO: empty fields
         try {
             const query = "SELECT user_id, access_token, refresh_token, time_grant " +
                 "FROM AuthSessions WHERE user_id = ?";
@@ -155,6 +172,7 @@ function getAuthRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
+        // TODO: empty fields
         try {
             if (await checkAccess(sqlPool, req.body.user_id, req.body.access_token)) {
                 res.json({ success: true });

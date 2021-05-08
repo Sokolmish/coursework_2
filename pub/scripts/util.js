@@ -2,14 +2,14 @@
 
 // Cookies
 
-function getCookie (name) {
+function getCookie(name) {
     var matches = document.cookie.match(new RegExp(
         "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
     ));
     return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-function setCookie (name, value, options = {}) {
+function setCookie(name, value, options = {}) {
     options = { path: '/', ...options };
     if (options.expires && options.expires.toUTCString)
         options.expires = options.expires.toUTCString();
@@ -23,23 +23,13 @@ function setCookie (name, value, options = {}) {
     document.cookie = updatedCookie;
 }
 
-function deleteCookie (name) {
+function deleteCookie(name) {
     setCookie(name, "", { 'max-age': -1 });
 }
 
 //
 
 function requestPOST(dest, params) {
-    // var encodeMessage = (str) => { //Replace special characters to codes
-    //     return str.toString().
-    //         replace(/\$/g, "%24").replace(/\&/g, "%26").replace(/\+/g, "%2b").
-    //         replace(/\,/g, "%2c").replace(/\//g, "%2f").replace(/\:/g, "%3a").
-    //         replace(/\;/g, "%3b").replace(/\=/g, "%3d").replace(/\?/g, "%3f").
-    //         replace(/\@/g, "%40");
-    // }
-    // var paramArr = [];
-    // for (var key in params)
-    //     paramArr.push(`${key}=${encodeMessage(params[key])}`);
     return fetch(dest, {
         method: 'POST',
         headers: {
@@ -47,4 +37,17 @@ function requestPOST(dest, params) {
         },
         body: JSON.stringify(params)
     });
+}
+
+function errCodeName(code) {
+    switch (code) {
+        case 0: return "SUCCESS";
+        case 1: return "WRONG_REQUEST";
+        case 2: return "SERVER_ERR";
+        case 3: return "ALREADY_EXISTS";
+        case 4: return "NOT_EXISTS";
+        case 5: return "ACCESS_DENIED";
+        case 6: return "EXPIRED";
+        default: return "???";
+    }
 }

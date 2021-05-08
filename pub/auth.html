@@ -21,14 +21,14 @@
                                     <table>
                                         <tr>
                                             <td>Email:</td>
-                                            <td><input type="text"></td>
+                                            <td><input id="signin_email" type="text"></td>
                                         </tr>
                                         <tr>
                                             <td>Password:</td>
-                                            <td><input type="text"></td>
+                                            <td><input id="signin_passwd" type="password"></td>
                                         </tr>
                                     </table>
-                                    <button id="btn_sign_in">Sign in</button>
+                                    <button id="btn_sign_in" onclick="signin()">Sign in</button>
                                 </div>
                             </td>
                             <td id="vert_separator"></td>
@@ -37,22 +37,22 @@
                                     <table>
                                         <tr>
                                             <td>Email:</td>
-                                            <td><input type="text"></td>
+                                            <td><input id="signup_email" type="text"></td>
                                         </tr>
                                         <tr>
-                                            <td>Login:</td>
-                                            <td><input type="text"></td>
+                                            <td>Username:</td>
+                                            <td><input id="signup_login" type="text"></td>
                                         </tr>
                                         <tr>
                                             <td>Password:</td>
-                                            <td><input type="password"></td>
+                                            <td><input id="signup_passwd" type="password"></td>
                                         </tr>
                                         <tr>
                                             <td>Repeat password:</td>
-                                            <td><input type="password"></td>
+                                            <td><input id="signup_repeat" type="password"></td>
                                         </tr>
                                     </table>
-                                    <button id="btn_sign_up">Sign up</button>
+                                    <button id="btn_sign_up" onclick="signup()">Sign up</button>
                                 </div>
                             </td>
                         </tr>
@@ -72,5 +72,7 @@
                 </div>
             </div>
         </div>
+        <script src="scripts/util.js"></script>
+        <script src="scripts/auth.js"></script>
     </body>
 </html>

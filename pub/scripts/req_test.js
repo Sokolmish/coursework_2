@@ -35,16 +35,7 @@ function doRequest() {
 
             if (resObj["err_code"] !== undefined) {
                 resBlock += "Err_code: [" + resObj["err_code"] + "] ";
-                switch (resObj["err_code"]) {
-                    case 0: resBlock += "SUCCESS"; break;
-                    case 1: resBlock += "WRONG_REQUEST"; break;
-                    case 2: resBlock += "SERVER_ERR"; break;
-                    case 3: resBlock += "ALREADY_EXISTS"; break;
-                    case 4: resBlock += "NOT_EXISTS"; break;
-                    case 5: resBlock += "ACCESS_DENIED"; break;
-                    case 6: resBlock += "EXPIRED"; break;
-                    default: resBlock += "???"; break;
-                }
+                resBlock += errCodeName(resObj["err_code"]);
                 resBlock += "<br>";
             }
 
