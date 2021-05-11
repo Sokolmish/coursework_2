@@ -11,6 +11,16 @@ for (let i = 0; i < FIELDS_COUNT; i++) {
         </div><br>`
 }
 
+function requestPOST(dest, params) {
+    return fetch(dest, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(params)
+    });
+}
+
 function doRequest() {
     var dest = document.getElementById("dest").value;
     var params = {};

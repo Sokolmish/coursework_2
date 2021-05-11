@@ -34,8 +34,9 @@ function getPostsRouter(sqlPool) {
         }
         // TODO: verify numbers
         try {
-            const query = "SELECT post_id, username, `date`, title, content, votes " +
-                " FROM PostsView LIMIT ? OFFSET ?";
+            const query =
+                `SELECT post_id, username, \`date\`, title, content, votes 
+                FROM PostsView LIMIT ? OFFSET ?`;
             const params = [ parseInt(req.body.count), parseInt(req.body.offset) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
             res.json({

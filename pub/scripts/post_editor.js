@@ -1,6 +1,6 @@
 function editor_help() {
     alert(
-        "*italic*\n**bold**\n***bold italic***\n__underline__\n~~strike~~\n" +
+        "*italic*\n**bold**\n***bold italic***\n~~strike~~\n" +
         "[Link caption](example.com)\n![](pics.com/myimage.png)"
     );
 }

@@ -73,6 +73,7 @@ async function loadPosts() {
         res.posts[i].content = safe_tags_replace(res.posts[i].content);
         if (md !== undefined)
             res.posts[i].content = md.render(res.posts[i].content);
+        res.posts[i].date = formatDate(new Date(res.posts[i].date));
     }
     if (!res.success) {
         console.error("Error while post loading occured");

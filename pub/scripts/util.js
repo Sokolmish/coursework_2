@@ -27,18 +27,6 @@ function deleteCookie(name) {
     setCookie(name, "", { 'max-age': -1 });
 }
 
-//
-
-function requestPOST(dest, params) {
-    return fetch(dest, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(params)
-    });
-}
-
 function errCodeName(code) {
     switch (code) {
         case 0: return "SUCCESS";
