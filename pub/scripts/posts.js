@@ -1,10 +1,10 @@
 'use strict'
 
-const postTemplate = `
+var postTemplate = `
 {{#posts}}
 <div class="post_wrapper">
     <div class="post_body">
-        <div class="post_title"><a href="post.html">{{title}}</a></div>
+        <div class="post_title"><a href="post.html?post_id={{post_id}}">{{title}}</a></div>
         <div class="post_content">{{{content}}}</div>
     </div>
     <div class="post_tags_wrapper">
@@ -58,29 +58,22 @@ var md = window.markdownit();
 
 async function loadPosts() {
     console.log("Loading posts...");
-    var rawRes = await fetch("/api/posts/get_posts", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "offset": 0,
-            "count": 100
-        })
-    });
+    var offset = 0;
+    var maxCnt = 100;
+    var rawRes = await fetch(`/api/posts/list?offset=${offset}&count=${maxCnt}`);
     var res = await rawRes.json();
-    for (var i in res.posts) {
-        res.posts[i].content = safe_tags_replace(res.posts[i].content);
-        if (md !== undefined)
-            res.posts[i].content = md.render(res.posts[i].content);
-        res.posts[i].date = formatDate(new Date(res.posts[i].date));
-    }
     if (!res.success) {
         console.error("Error while post loading occured");
         console.error(res);
         document.getElementById('posts_block').innerHTML = 
             `<div id="loading_err_label">Error while loading occured</div>`;
         return;
+    }
+    for (var i in res.posts) {
+        res.posts[i].content = safe_tags_replace(res.posts[i].content);
+        if (md !== undefined)
+            res.posts[i].content = md.render(res.posts[i].content);
+        res.posts[i].date = formatDate(new Date(res.posts[i].date));
     }
     document.getElementById('posts_block').innerHTML =
         Mustache.render(postTemplate, res);

@@ -17,4 +17,15 @@ function checkFields(obj, fields) {
     return true;
 }
 
-export { checkFields, ApiErrCodes }
+function checkFieldsNonEmpty(obj, fields) {
+    for (var field of fields)
+        if (obj[field] === undefined || obj[field] === "")
+            return false;
+        else if (!(typeof obj[field] === 'string' || obj[field] instanceof String))
+            return false;
+        else if (obj[field] === "")
+            return false;
+    return true;
+}
+
+export { checkFields, checkFieldsNonEmpty, ApiErrCodes }

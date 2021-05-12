@@ -2,7 +2,7 @@
 
 import express from "express"
 import crypto from "crypto"
-import { checkFields, ApiErrCodes } from "./util.js"
+import { checkFieldsNonEmpty, ApiErrCodes } from "./util.js"
 
 const PBKDF2_ITERS = 1e5; // TODO: declare it somewhere else
 const PBKDF2_LENGTH = 32;
@@ -50,11 +50,11 @@ function getAuthRouter(sqlPool) {
 
     // API: sign up
     router.post("/signup", async (req, res) => {
-        if (!checkFields(req.body, [ "email", "username", "passwd" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "email", "username", "passwd" ])) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: empty fields
+        // TODO: verify
         try {
             if (await isUserExists(req.body.username)) {
                 res.json({
@@ -87,10 +87,11 @@ function getAuthRouter(sqlPool) {
 
     // API: sign in
     router.post("/signin", async (req, res) => {
-        if (!checkFields(req.body, [ "email", "passwd" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "email", "passwd" ])) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
+        // TODO: verify
         try {
             if (!await isEmailExists(req.body.email)) {
                 res.json({
@@ -98,7 +99,6 @@ function getAuthRouter(sqlPool) {
                 });
                 return;
             }
-            // TODO: empty fields
             const query = "SELECT user_id, email, passwd, salt FROM UsersAuthView WHERE email = ?";
             const [rows, _] = await sqlPool.promise().query(query, [ req.body.email ]);
             const userId = rows[0].user_id;
@@ -126,11 +126,11 @@ function getAuthRouter(sqlPool) {
 
     // API: refresh
     router.post("/refresh", async (req, res) => {
-        if (!checkFields(req.body, [ "user_id", "refresh_token" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "refresh_token" ])) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: empty fields
+        // TODO: verify
         try {
             const query = "SELECT user_id, access_token, refresh_token, time_grant " +
                 "FROM AuthSessions WHERE user_id = ?";
@@ -168,7 +168,7 @@ function getAuthRouter(sqlPool) {
 
     // API: verify
     router.post("/verify", async (req, res) => {
-        if (!checkFields(req.body, [ "user_id", "access_token" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
