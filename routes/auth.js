@@ -16,7 +16,9 @@ async function checkAuth(sqlPool, user_id, token) {
     const storedToken = Buffer.from(row[0].access_token, "hex");
     const givenToken = Buffer.from(token, "base64");
     const tokenTime = (new Date()).getTime() - row[0].time_grant.getTime();
-    if (!crypto.timingSafeEqual(storedToken, givenToken)) // TODO: length
+    if (storedToken.length != givenToken.length)
+        return false; // ApiErrCodes.ACCESS_DENIED
+    if (!crypto.timingSafeEqual(storedToken, givenToken))
         return false; // ApiErrCodes.ACCESS_DENIED
     else if (tokenTime > ACCESS_EXPIRE)
         return false; // ApiErrCodes.EXPIRED
@@ -103,10 +105,13 @@ function getAuthRouter(sqlPool) {
             const [rows, _] = await sqlPool.promise().query(query, [ req.body.email ]);
             const userId = rows[0].user_id;
             const saltHex = rows[0].salt;
-            const pwdHashStored = rows[0].passwd;
+            const pwdHashStored = Buffer.from(rows[0].passwd, "hex");
             const pwdHashGiven =
                 crypto.pbkdf2Sync(req.body.passwd, saltHex, PBKDF2_ITERS, PBKDF2_LENGTH, "sha256");
-            if (crypto.timingSafeEqual(pwdHashGiven, Buffer.from(pwdHashStored, "hex"))) { // TODO: length
+            if (pwdHashGiven.length != pwdHashStored.length) {
+                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+            }
+            else if (crypto.timingSafeEqual(pwdHashGiven, pwdHashStored)) {
                 const tokens = await authorizeUser(userId);
                 res.json({
                     success: true,
@@ -142,7 +147,11 @@ function getAuthRouter(sqlPool) {
             const storedToken = Buffer.from(rows[0].refresh_token, "hex");
             const givenToken = Buffer.from(req.body.refresh_token, "base64");
             const tokenTime = (new Date()).getTime() - rows[0].time_grant.getTime();
-            if (!crypto.timingSafeEqual(storedToken, givenToken)) { // TODO: length
+            if (storedToken.length != givenToken.length) {
+                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+                return;
+            }
+            else if (!crypto.timingSafeEqual(storedToken, givenToken)) {
                 res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
                 return;
             }

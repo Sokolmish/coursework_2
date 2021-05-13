@@ -101,23 +101,6 @@ async function sendComment() {
     // TODO: result
 }
 
-async function sendComment() {
-    var content = document.getElementById('comm_edit_field').value;
-    var user_id = getCookie("cw2_user_id");
-    await fetch('/api/comments/create', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            "post": curPostId,
-            "content": content,
-            "author": user_id
-        })
-    });
-    // TODO: result
-}
-
 async function loadComments(id) {
     console.log("Loading comments...");
     var rawRes = await fetch(`/api/comments/get_comments?post_id=${id}`);

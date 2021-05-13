@@ -1,11 +1,13 @@
 CREATE TABLE Users (
     user_id int PRIMARY KEY AUTO_INCREMENT,
-    username varchar(32) NOT NULL UNIQUE, -- TODO: Empty
-    email varchar(320) NOT NULL UNIQUE, -- TODO: Empty
+    username varchar(32) NOT NULL UNIQUE,
+    email varchar(320) NOT NULL UNIQUE,
     date_reg datetime NOT NULL,
     birthday date,
     avatar varchar(32) NOT NULL DEFAULT 'default_avatar.png',
-    bio varchar(512)
+    bio varchar(512),
+    CONSTRAINT CHECK (username <> ''),
+    CONSTRAINT CHECK (email <> '')
 );
 
 CREATE TABLE Auth (
@@ -27,11 +29,15 @@ CREATE TABLE Posts (
 	post_id int PRIMARY KEY AUTO_INCREMENT,
     author int,
     date datetime NOT NULL,
-    title varchar(128) NOT NULL, -- TODO: Empty
-    content text NOT NULL, -- TODO: Empty
-    upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
+    title varchar(128) NOT NULL,
+    content text NOT NULL,
+    upvotes int NOT NULL DEFAULT 0,
     downvotes int NOT NULL DEFAULT 0,
-    FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL
+    FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL,
+    CONSTRAINT CHECK (title <> ''),
+    CONSTRAINT CHECK (content <> ''),
+    CONSTRAINT CHECK (upvotes >= 0),
+    CONSTRAINT CHECK (downvotes >= 0)
 );
 
 CREATE TABLE Comments (
@@ -39,11 +45,14 @@ CREATE TABLE Comments (
     author int,
     date datetime NOT NULL,
     post int NOT NULL,
-    content text NOT NULL, -- TODO: Empty
-    upvotes int NOT NULL DEFAULT 0, -- TODO: non negative
+    content text NOT NULL,
+    upvotes int NOT NULL DEFAULT 0,
     downvotes int NOT NULL DEFAULT 0,
     FOREIGN KEY(author) REFERENCES Users(user_id) ON DELETE SET NULL,
-    FOREIGN KEY(post) REFERENCES Posts(post_id) ON DELETE CASCADE
+    FOREIGN KEY(post) REFERENCES Posts(post_id) ON DELETE CASCADE,
+    CONSTRAINT CHECK (content <> ''),
+    CONSTRAINT CHECK (upvotes >= 0),
+    CONSTRAINT CHECK (downvotes >= 0)
 );
 
 CREATE TABLE Tags (
@@ -57,7 +66,7 @@ CREATE TABLE PostVotes (
     user_id int NOT NULL,
     is_up boolean NOT NULL,
     FOREIGN KEY(post_id) REFERENCES Posts(post_id) ON DELETE CASCADE,
-    FOREIGN KEY(user_id) REFERENCES Users(user_id) ON DELETE CASCADE    
+    FOREIGN KEY(user_id) REFERENCES Users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE CommVotes (
