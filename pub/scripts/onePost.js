@@ -1,7 +1,7 @@
 'use strict'
 
 var postTemplate = `
-<h2>{{title}} TODO</h2>
+<h2>{{title}}</h2>
 <div id="post_content">{{{content}}}</div>
 <hr>
 <div class="post_tags_wrapper">
@@ -24,6 +24,20 @@ var postTemplate = `
     </div>
 </div>
 `;
+
+var commTemplate = `
+{{#comments}}
+<div class="comment_block">
+    <div class="comment_content">{{{content}}}</div>
+    <hr>
+    <div class="comment_author">{{username}}</div>
+    <div class="comment_date">{{date}}</div>
+</div>
+{{/comments}}
+{{^comments}}There are no comments.{{/comments}}
+`;
+
+var curPostId = (new URLSearchParams(window.location.search)).get('post_id');
 
 var tagsToReplace = {
     '&': '&amp;',
@@ -59,7 +73,7 @@ async function loadPost(id) {
         console.error("Error while post loading occured");
         console.error(res);
         document.getElementById('post_block').innerHTML = 
-            `<div id="loading_err_label">Error while loading occured</div>`;
+            `<div class="loading_err_label">Error while loading occured</div>`;
         return;
     }
     res.post.content = safe_tags_replace(res.post.content);
@@ -70,4 +84,60 @@ async function loadPost(id) {
         Mustache.render(postTemplate, res.post);
 }
 
-loadPost((new URLSearchParams(window.location.search)).get('post_id'));
+async function sendComment() {
+    var content = document.getElementById('comm_edit_field').value;
+    var user_id = getCookie("cw2_user_id");
+    await fetch('/api/comments/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "post": curPostId,
+            "content": content,
+            "author": user_id
+        })
+    });
+    // TODO: result
+}
+
+async function sendComment() {
+    var content = document.getElementById('comm_edit_field').value;
+    var user_id = getCookie("cw2_user_id");
+    await fetch('/api/comments/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "post": curPostId,
+            "content": content,
+            "author": user_id
+        })
+    });
+    // TODO: result
+}
+
+async function loadComments(id) {
+    console.log("Loading comments...");
+    var rawRes = await fetch(`/api/comments/get_comments?post_id=${id}`);
+    var res = await rawRes.json();
+    if (!res.success) {
+        console.error("Error while comments loading occured");
+        console.error(res);
+        document.getElementById('comments_list').innerHTML = 
+            `<div class="loading_err_label">Error while loading occured</div>`;
+        return;
+    }
+    for (var i in res.comments) {
+        res.comments[i].content = safe_tags_replace(res.comments[i].content);
+        if (md !== undefined)
+            res.comments[i].content = md.render(res.comments[i].content);
+        res.comments[i].date = formatDate(new Date(res.comments[i].date));
+    }
+    document.getElementById('comments_list').innerHTML =
+        Mustache.render(commTemplate, res);
+}
+
+loadPost(curPostId);
+loadComments(curPostId);

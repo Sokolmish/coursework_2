@@ -63,10 +63,10 @@ async function loadPosts() {
     var rawRes = await fetch(`/api/posts/list?offset=${offset}&count=${maxCnt}`);
     var res = await rawRes.json();
     if (!res.success) {
-        console.error("Error while post loading occured");
+        console.error("Error while posts loading occured");
         console.error(res);
         document.getElementById('posts_block').innerHTML = 
-            `<div id="loading_err_label">Error while loading occured</div>`;
+            `<div class="loading_err_label">Error while loading occured</div>`;
         return;
     }
     for (var i in res.posts) {

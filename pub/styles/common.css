@@ -29,3 +29,8 @@ body {
 /* #footer_links {
     text-align: center;
 } */
+
+
+.loading_err_label {
+    color: red;
+}

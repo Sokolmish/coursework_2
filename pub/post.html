@@ -13,15 +13,19 @@
                     <h1>Post: lorem ipsum</h1>
                 </div>
                 <hr>
-                <div id="post_block" class="main_block">
-                    
+                <div id="post_block" class="main_block"></div>
+                <hr>
+                <div class="main_block" id="comm_edit">
+                    <textarea id="comm_edit_field"></textarea>
+                    <br>
+                    <button onclick="sendComment()">Send</button>
                 </div>
                 <hr>
                 <div class="main_block" id="comments">
-                    <div id="comments_title">Comments</div>
-                    <div>
-                        Perfect!
+                    <div id="comments_title">
+                        <h3>Comments</h3>
                     </div>
+                    <div id="comments_list"></div>
                 </div>
                 <hr>
                 <div class="main_block" id="footer">

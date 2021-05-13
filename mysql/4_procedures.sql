@@ -33,4 +33,13 @@ BEGIN
         VALUES(iuser_id, CURRENT_TIMESTAMP, ititle, icontent);
 END//
 
--- CreateComment
+CREATE PROCEDURE CreateComment (
+    iuser_id int,
+    ipost int,
+    icontent text
+)
+BEGIN
+    INSERT INTO Comments(author, `date`, post, content)
+        VALUES(iuser_id, CURRENT_TIMESTAMP, ipost, icontent);
+END//
+

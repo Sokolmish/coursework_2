@@ -91,3 +91,32 @@
     -ms-user-select: none;
     user-select: none;
 }
+
+/* Comment editor */
+
+#comm_edit_field {
+    width: 600px;
+    height: 100px;
+}
+
+/* Comments */
+
+.comment_block {
+    margin-top: 30px;
+    width: 500px;
+    min-height: 60px;
+    border: solid black 1px;
+    border-radius: 15px;
+}
+
+.comment_content {
+    margin: 20px 10px;
+}
+
+.comment_author {
+    margin: 10px;
+}
+
+.comment_date {
+    margin: 10px;
+}
