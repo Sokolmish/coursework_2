@@ -6,6 +6,8 @@ services:
             context: mysql
             dockerfile: Dockerfile.database
         image: cwork2_database
+        volumes:
+            - db_volume:/var/lib/mysql
         environment:
             MYSQL_DATABASE: cwork2_db
         env_file:
@@ -49,3 +51,6 @@ services:
         depends_on:
             - cw2_server
             - cw2_phpmyadmin
+
+volumes:
+    db_volume:
