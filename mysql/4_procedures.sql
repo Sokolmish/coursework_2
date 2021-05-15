@@ -23,6 +23,13 @@ BEGIN
         UPDATE access_token=iaceess, refresh_token=irefresh, time_grant=CURRENT_TIMESTAMP;
 END//
 
+CREATE PROCEDURE Deauthorize (
+    iuser_id int
+)
+BEGIN
+    DELETE FROM AuthSessions WHERE user_id = iuser_id;
+END//
+
 CREATE PROCEDURE CreatePost (
     iuser_id int,
     ititle varchar(128),

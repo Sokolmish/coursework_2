@@ -87,7 +87,8 @@ async function loadPost(id) {
 async function sendComment() {
     var content = window.comm_edit_field.value;
     var user_id = getCookie("cw2_user_id");
-    await fetch('/api/comments/create', {
+    // TODO: validate
+    var rawRes = await fetch('/api/comments/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -99,7 +100,21 @@ async function sendComment() {
             "token": getCookie("cw2_access_token")
         })
     });
-    // TODO: result
+    var res = await rawRes.json();
+    if (res.success) {
+        console.log("Comment successfully created");
+        window.location.reload();
+    }
+    else {
+        if (res.err_code === 5) { // Access denied
+            console.log("Access denied. Reauthorization");
+            reauthorize();
+        }
+        else {
+            console.error(res);
+            alert("Error " + errCodeName(res.err_code));
+        }
+    }
 }
 
 async function loadComments(id) {
@@ -115,7 +130,7 @@ async function loadComments(id) {
     }
     for (var i in res.comments) {
         res.comments[i].content = safe_tags_replace(res.comments[i].content);
-        // if (md !== undefined)
+        // if (md !== undefined) // Markdown in comments is disabled
         //     res.comments[i].content = md.render(res.comments[i].content);
         res.comments[i].date = formatDate(new Date(res.comments[i].date));
     }

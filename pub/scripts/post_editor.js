@@ -41,7 +41,10 @@ function editor_set_braces(brace) {
     }
 }
 
+
 async function createPost() {
+    preCheckAuth();
+
     // TODO: constraints
     var title = window.title_input.value;
     var content = window.editor_textarea.value;
@@ -62,10 +65,16 @@ async function createPost() {
     var res = await rawRes.json();
     if (res.success) {
         console.log("Post successfully created");
-        window.location.replace('/index.html');
+        window.location.replace('/index.html'); // ret_to?
     }
     else {
-        console.error(res);
-        alert("Error " + errCodeName(res.err_code));
+        if (res.err_code === 5) { // Access denied
+            console.log("Access denied. Reauthorization");
+            reauthorize();
+        }
+        else {
+            console.error(res);
+            alert("Error " + errCodeName(res.err_code));
+        }
     }
 }

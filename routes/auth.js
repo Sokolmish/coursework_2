@@ -49,6 +49,11 @@ function getAuthRouter(sqlPool) {
         return { accessToken, refreshToken };
     }
 
+    async function deauthorizeUser(userId) {
+        const query = "CALL Deauthorize(?)";
+        await sqlPool.promise().query(query, [ userId ]);
+    }
+
     var router = express.Router();
 
     // API: sign up
@@ -168,6 +173,32 @@ function getAuthRouter(sqlPool) {
                     access_token: tokens.accessToken.toString("base64"),
                     refresh_token: tokens.refreshToken.toString("base64")
                 });
+                return;
+            }
+        }
+        catch (err) {
+            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+        }
+    });
+
+    // API: logout
+    router.post("/logout", async (req, res) => {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+            return;
+        }
+        if (!Number.isInteger(parseInt(req.body.user_id))) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+            return;
+        }
+        try {
+            if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
+                deauthorizeUser(req.body.user_id);
+                res.json({ success: true });
+                return;
+            }
+            else {
+                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
                 return;
             }
         }

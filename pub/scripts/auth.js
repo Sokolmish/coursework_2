@@ -57,7 +57,12 @@ async function signin(_email, _passwd) {
         setCookie("cw2_user_id", res.user_id, cookieOpt);
         setCookie("cw2_access_token", res.access_token, cookieOpt);
         setCookie("cw2_refresh_token", res.refresh_token, cookieOpt);
-        window.location.replace('/index.html');
+        // Redirect if success
+        var retDest = (new URLSearchParams(window.location.search)).get('ret_to');
+        if (retDest !== null)
+            window.location.replace(retDest);
+        else
+            window.location.replace('/index.html');
     }
     else {
         console.error(res);
@@ -106,4 +111,41 @@ async function signup() {
         console.error(res);
         alert("Error " + errCodeName(res.err_code));
     }
+}
+
+async function doLogout() {
+    console.log("logout...");
+    var userId = getCookie("cw2_user_id");
+    var accessToken = getCookie("cw2_access_token");
+    if (userId in { "":0, undefined:0 } || accessToken in { "":0, undefined:0 }) {
+        console.warn("was not authorized");
+        deleteCookie("cw2_user_id");
+        deleteCookie("cw2_access_token");
+        deleteCookie("cw2_refresh_token");
+        return;
+    }
+
+    var rawRes = await fetch("/api/auth/logout", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "user_id": userId,
+            "access_token": accessToken,
+        })
+    });
+    var res = await rawRes.json();
+    if (res.success) {
+        console.log("Logout success");
+    }
+    else {
+        console.log("Logout failed");
+        console.error(res);
+        alert("Error while logout " + errCodeName(res.err_code));
+    }
+}
+
+if ((new URLSearchParams(window.location.search)).get('logout') === "true") {
+    doLogout();
 }

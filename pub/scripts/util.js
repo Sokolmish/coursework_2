@@ -24,7 +24,7 @@ function setCookie(name, value, options = {}) {
 }
 
 function deleteCookie(name) {
-    setCookie(name, "", { 'max-age': -1 });
+    setCookie(name, "", { 'max-age': -1, 'SameSite': 'Strict' });
 }
 
 function errCodeName(code) {
@@ -37,5 +37,23 @@ function errCodeName(code) {
         case 5: return "ACCESS_DENIED";
         case 6: return "EXPIRED";
         default: return "???";
+    }
+}
+
+async function reauthorize() {
+    // TODO: refresh
+    window.location.replace(`/auth.html?ret_to=${window.location}`);
+}
+
+function preCheckAuth() {
+    if (getCookie("cw2_user_id") in { "": 0, undefined: 0 }) {
+        console.log("User id is not found. Reauthorization");
+        reauthorize();
+        return;
+    }
+    if (getCookie("cw2_access_token") in { "": 0, undefined: 0 }) {
+        console.log("Access token is not found. Reauthorization");
+        reauthorize();
+        return;
     }
 }
