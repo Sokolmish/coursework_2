@@ -26,8 +26,8 @@ async function checkEmail(email) {
 }
 
 async function signin(_email, _passwd) {
-    var email = document.getElementById("signin_email").value;
-    var passwd = document.getElementById("signin_passwd").value;
+    var email = window.signin_email.value;
+    var passwd = window.signin_passwd.value;
     if (_email !== undefined && _passwd !== undefined) {
         email = _email;
         passwd = _passwd;
@@ -66,10 +66,10 @@ async function signin(_email, _passwd) {
 }
 
 async function signup() {
-    var username = document.getElementById("signup_login").value;
-    var email = document.getElementById("signup_email").value;
-    var passwd = document.getElementById("signup_passwd").value;
-    var passwdRep = document.getElementById("signup_repeat").value;
+    var username = window.signup_login.value;
+    var email = window.signup_email.value;
+    var passwd = window.signup_passwd.value;
+    var passwdRep = window.signup_repeat.value;
     if (!checkLogin(username)) {
         alert("Wrong username (syntax)");
         return;

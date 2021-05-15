@@ -17,22 +17,20 @@ function insertAtCursor(myField, myValue) {
     }
 }
 
-var __editor_textarea = document.getElementById("editor_textarea");
-
 function editor_set_link() {
-    insertAtCursor(__editor_textarea, "[your caption](http://example.com) ");
+    insertAtCursor(window.editor_textarea, "[your caption](http://example.com) ");
 }
 
 function editor_set_image() {
-    insertAtCursor(__editor_textarea, "![](http://example.com) ");
+    insertAtCursor(window.editor_textarea, "![](http://example.com) ");
 }
 
 function editor_set_braces(brace) {
-    var myField = __editor_textarea;
+    var myField = window.editor_textarea;
     if (myField.selectionStart || myField.selectionStart == '0') {
         var startPos = myField.selectionStart;
         var endPos = myField.selectionEnd;
-        myField.value = 
+        myField.value =
             myField.value.substring(0, startPos) +
             brace +
             myField.value.substring(startPos, endPos) +
@@ -45,8 +43,8 @@ function editor_set_braces(brace) {
 
 async function createPost() {
     // TODO: constraints
-    var title = document.getElementById("title_input").value;
-    var content = document.getElementById("editor_textarea").value;
+    var title = window.title_input.value;
+    var content = window.editor_textarea.value;
     var user_id = getCookie("cw2_user_id");
 
     var rawRes = await fetch("/api/posts/create", {

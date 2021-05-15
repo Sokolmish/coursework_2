@@ -113,5 +113,25 @@
 }
 
 .post_content {
-    white-space: pre;
+    white-space: normal;
+}
+
+.post_content img {
+    display: block;
+    margin: 20px auto;
+    max-width: 50%;
+    max-width: 430px;
+}
+
+
+#mp_menu {
+    margin: 0;
+    padding: 4px;
+}
+
+#mp_menu li {
+    display: inline;
+    margin-right: 9px;
+    border: 1px solid #000;
+    padding: 5px;
 }

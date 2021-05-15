@@ -2,9 +2,8 @@
 
 const FIELDS_COUNT = 7;
 
-const inputDiv = document.getElementById("input");
 for (let i = 0; i < FIELDS_COUNT; i++) {
-    inputDiv.innerHTML +=
+    window.input.innerHTML +=
         `<div class="param_block" style>
             <input class="text_field" type="text" id="param_name_${i}" class="param_name" style="width: 150px;">
             : <input class="text_field" type="text" id="param_val_${i}" class="param_val" style="width: 500px;">
@@ -22,7 +21,7 @@ function requestPOST(dest, params) {
 }
 
 function doRequest() {
-    var dest = document.getElementById("dest").value;
+    var dest = window.dest.value;
     var params = {};
     for (var i = 0; i < FIELDS_COUNT; i++) {
         const name = document.getElementById(`param_name_${i}`).value;
@@ -49,10 +48,10 @@ function doRequest() {
                 resBlock += "<br>";
             }
 
-            document.getElementById("response_summary").innerHTML = resBlock;
+            window.response_summary.innerHTML = resBlock;
         })
         .catch(err => {
-            document.getElementById("response_area").innerText = "[ERROR] " + err;
-            document.getElementById("response_summary").innerHTML = "ERROR";
+            window.response_area.innerText = "[ERROR] " + err;
+            window.response_summary.innerHTML = "ERROR";
         });
 }

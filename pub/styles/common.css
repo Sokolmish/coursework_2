@@ -15,7 +15,11 @@ body {
     background-color: #ffffff;
 }
 
-/* #main_title {} */
+.shy_link, .shy_link:hover, .shy_link:visited, .shy_link:active {
+    color: inherit;
+    text-decoration: none;
+}
+
 .main_block {
     margin: 20px 20px 20px 20px;
 }

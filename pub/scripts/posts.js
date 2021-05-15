@@ -65,7 +65,7 @@ async function loadPosts() {
     if (!res.success) {
         console.error("Error while posts loading occured");
         console.error(res);
-        document.getElementById('posts_block').innerHTML = 
+        window.posts_block.innerHTML = 
             `<div class="loading_err_label">Error while loading occured</div>`;
         return;
     }
@@ -75,8 +75,7 @@ async function loadPosts() {
             res.posts[i].content = md.render(res.posts[i].content);
         res.posts[i].date = formatDate(new Date(res.posts[i].date));
     }
-    document.getElementById('posts_block').innerHTML =
-        Mustache.render(postTemplate, res);
+    window.posts_block.innerHTML = Mustache.render(postTemplate, res);
 }
 
 loadPosts();

@@ -72,7 +72,7 @@ async function loadPost(id) {
     if (!res.success) {
         console.error("Error while post loading occured");
         console.error(res);
-        document.getElementById('post_block').innerHTML = 
+        window.post_block.innerHTML =
             `<div class="loading_err_label">Error while loading occured</div>`;
         return;
     }
@@ -85,7 +85,7 @@ async function loadPost(id) {
 }
 
 async function sendComment() {
-    var content = document.getElementById('comm_edit_field').value;
+    var content = window.comm_edit_field.value;
     var user_id = getCookie("cw2_user_id");
     await fetch('/api/comments/create', {
         method: 'POST',
@@ -109,18 +109,17 @@ async function loadComments(id) {
     if (!res.success) {
         console.error("Error while comments loading occured");
         console.error(res);
-        document.getElementById('comments_list').innerHTML = 
+        window.comments_list.innerHTML =
             `<div class="loading_err_label">Error while loading occured</div>`;
         return;
     }
     for (var i in res.comments) {
         res.comments[i].content = safe_tags_replace(res.comments[i].content);
-        if (md !== undefined)
-            res.comments[i].content = md.render(res.comments[i].content);
+        // if (md !== undefined)
+        //     res.comments[i].content = md.render(res.comments[i].content);
         res.comments[i].date = formatDate(new Date(res.comments[i].date));
     }
-    document.getElementById('comments_list').innerHTML =
-        Mustache.render(commTemplate, res);
+    window.comments_list.innerHTML = Mustache.render(commTemplate, res);
 }
 
 loadPost(curPostId);
