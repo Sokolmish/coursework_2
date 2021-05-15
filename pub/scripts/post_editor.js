@@ -57,7 +57,8 @@ async function createPost() {
         body: JSON.stringify({
             "title": title,
             "content": content,
-            "user_id": user_id
+            "user_id": user_id,
+            "token": getCookie("cw2_access_token")
         })
     });
     var res = await rawRes.json();

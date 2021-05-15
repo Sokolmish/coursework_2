@@ -95,7 +95,8 @@ async function sendComment() {
         body: JSON.stringify({
             "post": curPostId,
             "content": content,
-            "author": user_id
+            "author": user_id,
+            "token": getCookie("cw2_access_token")
         })
     });
     // TODO: result

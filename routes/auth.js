@@ -4,7 +4,7 @@ import express from "express"
 import crypto from "crypto"
 import { checkFieldsNonEmpty, ApiErrCodes } from "./util.js"
 
-const PBKDF2_ITERS = 1e5; // TODO: declare it somewhere else
+const PBKDF2_ITERS = 1e5;
 const PBKDF2_LENGTH = 32;
 const ACCESS_EXPIRE = 180 * 6e4; // minutes to milliseconds
 const REFRESH_EXPIRE = (24 * 30) * 3.6e6; // hours to milliseconds
@@ -12,7 +12,8 @@ const REFRESH_EXPIRE = (24 * 30) * 3.6e6; // hours to milliseconds
 async function checkAuth(sqlPool, user_id, token) {
     const query = "SELECT user_id, access_token, time_grant FROM AuthSessions WHERE user_id = ?";
     const [row, _] = await sqlPool.promise().query(query, [ user_id ]);
-    // TODO: empty row
+    if (row.length == 0)
+        return false; // ApiErrCodes.NOT_EXIST
     const storedToken = Buffer.from(row[0].access_token, "hex");
     const givenToken = Buffer.from(token, "base64");
     const tokenTime = (new Date()).getTime() - row[0].time_grant.getTime();
@@ -181,7 +182,10 @@ function getAuthRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: empty fields
+        if (!Number.isInteger(parseInt(req.body.user_id))) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+            return;
+        }
         try {
             if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
                 res.json({ success: true });

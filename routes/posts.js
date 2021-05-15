@@ -8,13 +8,19 @@ function getPostsRouter(sqlPool) {
     var router = express.Router();
 
     router.post("/create", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "title", "content" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "title", "content", "token" ])) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: verify
+        if (!Number.isInteger(parseInt(req.body.user_id))) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+            return;
+        }
         try {
-            // TODO: check user permissions
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+                return;
+            }
             const query = "CALL CreatePost(?, ?, ?)";
             const params = [ req.body.user_id, req.body.title, req.body.content ];
             await sqlPool.promise().query(query, params);
@@ -30,7 +36,10 @@ function getPostsRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: verify
+        if (!Number.isInteger(parseInt(req.query.offset)) || !Number.isInteger(parseInt(req.query.count))) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "NaN" });
+            return;
+        }
         try {
             const query =
                 `SELECT post_id, username, \`date\`, title, content, votes 
@@ -53,7 +62,10 @@ function getPostsRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
             return;
         }
-        // TODO: verify
+        if (!Number.isInteger(parseInt(req.query.post_id))) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+            return;
+        }
         try {
             const query =
                 `SELECT post_id, username, \`date\`, title, content, votes 
