@@ -8,6 +8,6 @@ CREATE VIEW PostsView AS
     ORDER BY p.`date` DESC;
 
 CREATE VIEW CommentsView AS
-    SELECT c.comment_id, u.username, c.`date`, c.post, c.content, (c.upvotes - c.downvotes) AS votes
+    SELECT c.comment_id, u.username, c.`date`, c.post, c.content
 	FROM Comments AS c INNER JOIN Users AS u ON c.author = u.user_id
     ORDER BY c.`date` ASC;
