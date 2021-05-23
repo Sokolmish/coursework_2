@@ -11,3 +11,7 @@ CREATE VIEW CommentsView AS
     SELECT c.comment_id, u.username, c.`date`, c.post, c.content
 	FROM Comments AS c INNER JOIN Users AS u ON c.author = u.user_id
     ORDER BY c.`date` ASC;
+
+CREATE VIEW TagsView AS
+    SELECT t.tagname, a.post_id
+    FROM Tags AS t INNER JOIN TagsAssign AS a ON t.tag_id = a.tag_id;

@@ -36,6 +36,7 @@ function getPostsRouter(sqlPool) {
                 return;
             }
         }
+        // TODO: tags length in unicode
 
         try {
             if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
@@ -82,10 +83,9 @@ function getPostsRouter(sqlPool) {
 
             // Tags
             const query2 =
-                `SELECT t.tagname, a.post_id FROM Tags AS t INNER JOIN
-                TagsAssign AS a ON t.tag_id = a.tag_id INNER JOIN
+                `SELECT t.tagname, t.post_id FROM TagsView t INNER JOIN
                 (SELECT post_id FROM PostsView LIMIT ? OFFSET ?) AS v2
-                ON a.post_id = v2.post_id`;
+                ON t.post_id = v2.post_id`;
             const params2 = [ parseInt(req.query.count), parseInt(req.query.offset) ];
             const [tagsRows, _2] = await sqlPool.promise().query(query2, params2);
 
@@ -130,9 +130,7 @@ function getPostsRouter(sqlPool) {
             }
 
             // Tags
-            const query2 =
-                `SELECT t.tagname FROM Tags AS t INNER JOIN
-                TagsAssign AS a ON t.tag_id = a.tag_id WHERE a.post_id = ?`;
+            const query2 = `SELECT tagname FROM TagsView WHERE post_id = ?`;
             const params2 = [ parseInt(req.query.post_id) ];
             const [tagsRows, _2] = await sqlPool.promise().query(query2, params2);
 
