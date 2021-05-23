@@ -16,22 +16,17 @@
                 <!-- Tags -->
                 <div class="main_block">
                     <div id="tags_input">
-                        <input type="text">
-                        <button>Add tag</button>
+                        <input id="tag_input" type="text">
+                        <button onclick="tagClick()">Add tag</button>
                     </div>
                     <div id="tags_entered">
                         <div class="tag_control">
-                            <div class="post_tag">Cats</div>
-                            <span class="tag_delete">X</span>
-                        </div>
-                        <div class="tag_control">
-                            <div class="post_tag">Funny</div>
-                            <span class="tag_delete">X</span>
+                            <div class="post_no_tag">No tags</div>
                         </div>
                     </div>
                 </div>
+
                 <hr>
-                <!-- End tags -->
                 <div class="main_block">
                     <input id="title_input" type="text">
                 </div>
@@ -67,6 +62,7 @@
                 </div>
             </div>
         </div>
+        <script src="scripts/mustache.min.js"></script>
         <script src="scripts/util.js"></script>
         <script src="scripts/authUtil.js"></script>
         <script src="scripts/post_editor.js"></script>

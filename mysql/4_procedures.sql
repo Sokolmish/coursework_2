@@ -1,5 +1,7 @@
 DELIMITER //
 
+-- TODO: transactions?
+
 CREATE PROCEDURE CreateUser (
     iusername varchar(32),
     iemail varchar(320),
@@ -33,11 +35,15 @@ END//
 CREATE PROCEDURE CreatePost (
     iuser_id int,
     ititle varchar(128),
-    icontent text
+    icontent text,
+    itags text
 )
 BEGIN
     INSERT INTO Posts(`author`, `date`, `title`, `content`)
         VALUES(iuser_id, CURRENT_TIMESTAMP, ititle, icontent);
+    INSERT INTO TagsAssign(`tag_id`, `post_id`)
+        SELECT `tag_id`, LAST_INSERT_ID() AS post_id
+        FROM Tags WHERE FIND_IN_SET(`tagname`, itags);
 END//
 
 CREATE PROCEDURE CreateComment (
@@ -49,4 +55,3 @@ BEGIN
     INSERT INTO Comments(`author`, `date`, `post`, `content`)
         VALUES(iuser_id, CURRENT_TIMESTAMP, ipost, icontent);
 END//
-

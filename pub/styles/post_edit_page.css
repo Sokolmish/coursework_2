@@ -72,9 +72,27 @@
     padding: 3px 6px;
     margin-right: 5px;
 }
+
+.post_no_tag {
+    display: inline-block;
+    background-color: #bba52a;
+    border: 1px solid #061066;
+    border-radius: 8px;
+    padding: 3px 6px;
+    margin-right: 5px;
+}
+
 .tag_delete {
     margin-right: 15px;
     color: red;
     border: solid 1px red;
     padding: 1px 2px;
+    cursor: pointer;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; 
 }

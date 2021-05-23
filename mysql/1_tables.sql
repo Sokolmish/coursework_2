@@ -53,7 +53,8 @@ CREATE TABLE Comments (
 
 CREATE TABLE Tags (
 	`tag_id` int PRIMARY KEY AUTO_INCREMENT,
-    `tagname` varchar(32) NOT NULL UNIQUE
+    `tagname` varchar(32) NOT NULL UNIQUE,
+    CONSTRAINT CHECK (LENGTH(`tagname`) BETWEEN 2 AND 30)
 );
 
 CREATE TABLE PostVotes (

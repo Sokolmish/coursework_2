@@ -16,14 +16,46 @@ function getPostsRouter(sqlPool) {
             res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
             return;
         }
+        
+        // Tags checking
+        if (!Array.isArray(req.body.tags)) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "No tags" });
+            return;
+        }
+        if (req.body.tags.length > 6) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "More than 7 tags" });
+            return;
+        }
+        for (var tag of req.body.tags) {
+            if (!(typeof tag === 'string' || tag instanceof String)) {
+                res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+                return;
+            }
+            if (tag.search(/^[0-9a-z_]{2,30}$/) == -1) {
+                res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+                return;
+            }
+        }
+
         try {
             if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
                 res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
                 return;
             }
-            const query = "CALL CreatePost(?, ?, ?)";
-            const params = [ req.body.user_id, req.body.title, req.body.content ];
-            await sqlPool.promise().query(query, params);
+
+            // Tags
+            const query2 = "INSERT IGNORE INTO Tags(tagname) VALUES ?"; // TODO: ignore?
+            const params2 = [ req.body.tags.map(x => [ x ]) ];
+            await sqlPool.promise().query(query2, params2);
+            
+            var tagsStr = req.body.tags.join(','); // TODO: escaping
+            // .map(x => `('${x}')`)
+            console.log(tagsStr);
+
+            const query1 = "CALL CreatePost(?, ?, ?, ?)";
+            const params1 = [ req.body.user_id, req.body.title, req.body.content, tagsStr ];
+            await sqlPool.promise().query(query1, params1);
+
             res.json({ success: true });
         }
         catch (err) {
