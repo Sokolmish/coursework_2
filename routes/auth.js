@@ -89,6 +89,7 @@ function getAuthRouter(sqlPool) {
             res.json({ success: true });
         }
         catch (err) {
+            console.error(err);
             res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
         }
     });
@@ -131,6 +132,7 @@ function getAuthRouter(sqlPool) {
             }
         }
         catch (err) {
+            console.error(err);
             res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
         }
     });
@@ -177,6 +179,7 @@ function getAuthRouter(sqlPool) {
             }
         }
         catch (err) {
+            console.error(err);
             res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
         }
     });
@@ -203,6 +206,7 @@ function getAuthRouter(sqlPool) {
             }
         }
         catch (err) {
+            console.error(err);
             res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
         }
     });
@@ -228,6 +232,7 @@ function getAuthRouter(sqlPool) {
             }
         }
         catch (err) {
+            console.error(err);
             res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
         }
     });
