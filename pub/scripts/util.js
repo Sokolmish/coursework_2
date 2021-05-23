@@ -39,21 +39,3 @@ function errCodeName(code) {
         default: return "???";
     }
 }
-
-async function reauthorize() {
-    // TODO: refresh
-    window.location.replace(`/auth.html?ret_to=${window.location}`);
-}
-
-function preCheckAuth() {
-    if (getCookie("cw2_user_id") in { "": 0, undefined: 0 }) {
-        console.log("User id is not found. Reauthorization");
-        reauthorize();
-        return;
-    }
-    if (getCookie("cw2_access_token") in { "": 0, undefined: 0 }) {
-        console.log("Access token is not found. Reauthorization");
-        reauthorize();
-        return;
-    }
-}

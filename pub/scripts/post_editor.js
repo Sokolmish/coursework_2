@@ -41,9 +41,10 @@ function editor_set_braces(brace) {
     }
 }
 
-
-async function createPost() {
-    preCheckAuth();
+async function createPost(triedRefresh = false) {
+    if (!preCheckAuth()) {
+        await reauthorize(); // Possible redirect to auth
+    }
 
     // TODO: constraints
     var title = window.title_input.value;
@@ -69,8 +70,17 @@ async function createPost() {
     }
     else {
         if (res.err_code === 5) { // Access denied
-            console.log("Access denied. Reauthorization");
-            reauthorize();
+            if (!triedRefresh) {
+                console.log("Access denied, reauthorization");
+                await reauthorize(); // Possible redirect to auth
+                console.log("Second attempt to create post");
+                createPost(true);
+            }
+            else {
+                console.log("Access denied at second try");
+                console.log("Redirecting to auth...");
+                window.location.replace(`/auth.html?ret_to=${window.location}`);
+            }
         }
         else {
             console.error(res);

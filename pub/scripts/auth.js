@@ -28,7 +28,7 @@ async function checkEmail(email) {
 async function signin(_email, _passwd) {
     var email = window.signin_email.value;
     var passwd = window.signin_passwd.value;
-    if (_email !== undefined && _passwd !== undefined) {
+    if (_email && _passwd) {
         email = _email;
         passwd = _passwd;
     }
@@ -59,7 +59,7 @@ async function signin(_email, _passwd) {
         setCookie("cw2_refresh_token", res.refresh_token, cookieOpt);
         // Redirect if success
         var retDest = (new URLSearchParams(window.location.search)).get('ret_to');
-        if (retDest !== null)
+        if (retDest)
             window.location.replace(retDest);
         else
             window.location.replace('/index.html');
@@ -117,7 +117,7 @@ async function doLogout() {
     console.log("logout...");
     var userId = getCookie("cw2_user_id");
     var accessToken = getCookie("cw2_access_token");
-    if (userId in { "":0, undefined:0 } || accessToken in { "":0, undefined:0 }) {
+    if (!userId || !accessToken) {
         console.warn("was not authorized");
         deleteCookie("cw2_user_id");
         deleteCookie("cw2_access_token");

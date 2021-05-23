@@ -84,7 +84,11 @@ async function loadPost(id) {
         Mustache.render(postTemplate, res.post);
 }
 
-async function sendComment() {
+async function sendComment(triedRefresh = false) {
+    if (!preCheckAuth()) {
+        await reauthorize(); // Possible redirect to auth
+    }
+
     var content = window.comm_edit_field.value;
     var user_id = getCookie("cw2_user_id");
     // TODO: validate
@@ -107,8 +111,17 @@ async function sendComment() {
     }
     else {
         if (res.err_code === 5) { // Access denied
-            console.log("Access denied. Reauthorization");
-            reauthorize();
+            if (!triedRefresh) {
+                console.log("Access denied, reauthorization");
+                await reauthorize(); // Possible redirect to auth
+                console.log("Second attempt to create comment");
+                sendComment(true);
+            }
+            else {
+                console.log("Access denied at second try");
+                console.log("Redirecting to auth...");
+                window.location.replace(`/auth.html?ret_to=${window.location}`);
+            }
         }
         else {
             console.error(res);
