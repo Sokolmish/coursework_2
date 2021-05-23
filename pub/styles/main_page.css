@@ -21,6 +21,15 @@
     margin-right: 5px;
 }
 
+.post_no_tag {
+    display: inline-block;
+    background-color: #bba52a;
+    border: 1px solid #061066;
+    border-radius: 8px;
+    padding: 3px 6px;
+    margin-right: 5px;
+}
+
 .post_info {
     border-top: solid 1px;
 }

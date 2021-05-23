@@ -6,9 +6,12 @@ var postTemplate = `
 <hr>
 <div class="post_tags_wrapper">
     <div class="post_tags">
-        <div class="post_tag">Cats</div>
-        <div class="post_tag">Funny</div>
-        <div class="post_tag">TODO</div>
+    {{#tags}}
+        <div class="post_tag">{{.}}</div>
+    {{/tags}}
+    {{^tags}}
+        <div class="post_no_tag">No tags</div>
+    {{/tags}}
     </div>
 </div>
 <hr>
