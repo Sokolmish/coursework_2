@@ -22,8 +22,8 @@ var postTemplate = `
     <div class="post_info_right">
         <div class="post_info_date">{{date}}</div>
         <div class="post_info_votes">{{votes}}</div>
-        <div class="post_info_downvote" onclick="vote('-')">-</div>
-        <div class="post_info_upvote" onclick="vote('+')">+</div>
+        <div class="post_info_downvote" onclick="vote('{{post_id}}', false)">-</div>
+        <div class="post_info_upvote" onclick="vote('{{post_id}}', true)">+</div>
     </div>
 </div>
 `;
@@ -93,7 +93,6 @@ async function sendComment(triedRefresh = false) {
     }
 
     var content = window.comm_edit_field.value;
-    var user_id = getCookie("cw2_user_id");
     // TODO: validate
     var rawRes = await fetch('/api/comments/create', {
         method: 'POST',
@@ -103,7 +102,7 @@ async function sendComment(triedRefresh = false) {
         body: JSON.stringify({
             "post": curPostId,
             "content": content,
-            "author": user_id,
+            "author": getCookie("cw2_user_id"),
             "token": getCookie("cw2_access_token")
         })
     });
@@ -121,9 +120,50 @@ async function sendComment(triedRefresh = false) {
                 sendComment(true);
             }
             else {
-                console.log("Access denied at second try");
-                console.log("Redirecting to auth...");
+                console.log("Access denied at second try. Redirecting to auth...");
                 window.location.replace(`/auth.html?ret_to=${window.location}`);
+            }
+        }
+        else {
+            console.error(res);
+            alert("Error " + errCodeName(res.err_code));
+        }
+    }
+}
+
+async function vote(post_id, is_up, triedRefresh = false) {
+    if (!preCheckAuth()) {
+        await reauthorize(); // Possible redirect to auth
+    }
+
+    var rawRes = await fetch('/api/posts/vote', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "post_id": post_id,
+            "user_id": getCookie("cw2_user_id"),
+            "is_up": is_up,
+            "token": getCookie("cw2_access_token")
+        })
+    });
+    var res = await rawRes.json();
+    if (res.success) {
+        console.log("Comment successfully created");
+        window.location.reload();
+    }
+    else {
+        if (res.err_code === 5) { // Access denied
+            if (!triedRefresh) {
+                console.log("Access denied, reauthorization");
+                await reauthorize(); // Possible redirect to auth
+                console.log("Second attempt to vote");
+                vote(post_id, is_up, true);
+            }
+            else {
+                console.log("Access denied at second try. Redirecting to auth...");
+                window.location.replace(`/auth.html?ret_to=${window.location}`); //
             }
         }
         else {

@@ -11,7 +11,7 @@ CREATE PROCEDURE CreateUser (
 BEGIN
     INSERT INTO Users(`username`, `email`, `date_reg`) VALUES(iusername, iemail, CURRENT_TIMESTAMP);
     INSERT INTO Auth(`user_id`, `passwd`, `salt`) VALUES(LAST_INSERT_ID(), ipasswd, isalt);
-END;
+END//
 
 CREATE PROCEDURE Authorize (
     iuser_id int,
@@ -54,4 +54,30 @@ CREATE PROCEDURE CreateComment (
 BEGIN
     INSERT INTO Comments(`author`, `date`, `post`, `content`)
         VALUES(iuser_id, CURRENT_TIMESTAMP, ipost, icontent);
+END//
+
+CREATE PROCEDURE DoVote (
+    iuser_id int,
+    ipost_id int,
+    iis_up boolean
+)
+BEGIN
+    IF EXISTS (
+        SELECT `p_vote_id` FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id
+    ) THEN
+        IF (SELECT `is_up` FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id) THEN
+            UPDATE Posts SET `upvotes` = `upvotes` - 1 WHERE `post_id` = ipost_id;
+        ELSE
+            UPDATE Posts SET `downvotes` = `downvotes` - 1 WHERE `post_id` = ipost_id;
+        END IF;
+        DELETE FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id;
+        -- TODO: Update instead of delete
+    END IF;
+    INSERT INTO PostVotes(`user_id`, `post_id`, `is_up`)
+        VALUES(iuser_id, ipost_id, iis_up);
+    IF iis_up THEN
+        UPDATE Posts SET `upvotes` = `upvotes` + 1 WHERE `post_id` = ipost_id;
+    ELSE
+        UPDATE Posts SET `downvotes` = `downvotes` + 1 WHERE `post_id` = ipost_id;
+    END IF;
 END//

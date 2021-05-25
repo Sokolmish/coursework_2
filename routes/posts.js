@@ -147,6 +147,34 @@ function getPostsRouter(sqlPool) {
         }
     });
 
+    router.post("/vote", async (req, res) => {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "post_id", "token" ])) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+            return;
+        }
+        console.log(req.body.is_up);
+        if (req.body.is_up !== true && req.body.is_up !== false) {
+            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+            return;
+        }
+        // TODO: validate
+        
+        // TODO: authorize
+        
+        try {
+            const query =`CALL DoVote(?, ?, ?)`;
+            const params = [ parseInt(req.body.user_id), parseInt(req.body.post_id), req.body.is_up ];
+            await sqlPool.promise().query(query, params);
+            res.json({
+                success: true
+            });
+        }
+        catch (err) {
+            console.error(err);
+            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+        }
+    });
+
     return router;
 }
 
