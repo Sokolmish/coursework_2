@@ -5,6 +5,7 @@ var userTemplate = `
     <li>Username: {{username}}</li>
     <li>Registration date: {{date_reg}}</li>
     <li>Birthday: {{birthday}}</li>
+    <li>Bio: {{bio}}</li>
 </ul>
 `;
 
@@ -14,8 +15,7 @@ function formatDate(date) {
             return '0' + num;
         return '' + num;
     }
-    return `| ${fit2(date.getDate())}.${fit2(date.getMonth() + 1)}.${date.getFullYear()} ` +
-            `${fit2(date.getHours())}:${fit2(date.getMinutes())} |`;
+    return `| ${fit2(date.getDate())}.${fit2(date.getMonth() + 1)}.${date.getFullYear()} |`;
 }
 
 async function loadUserData(user_id) {
@@ -30,10 +30,17 @@ async function loadUserData(user_id) {
         return;
     }
     res.user.date_reg = formatDate(new Date(res.user.date_reg));
+
     if (res.user.birthday)
         res.user.birthday = formatDate(new Date(res.user.birthday));
     else
         res.user.birthday = "-";
+
+    if (res.user.bio)
+        res.user.bio = res.user.bio; // TODO: Markdown
+    else
+        res.user.bio = "-";
+
     window.user_info_block.innerHTML = Mustache.render(userTemplate, res.user);
 }
 

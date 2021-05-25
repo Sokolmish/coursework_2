@@ -13,26 +13,19 @@
                 </div>
                 <hr>
                 <div class="main_block">
-                    <div>
-                        <ul>
-                            <li>Username: sokolmish</li>
-                            <li>Email: sokolmish@gmail.com</li>
-                            <li>Registration date: 07.03.21</li>
-                            <li>Birthday: 20.09.00</li>
-                        </ul>
-                    </div>
+                    <div id="user_info_block"></div>
                 </div>
                 <div class="main_block">
                     <div id="status_block">
-                        Status:
-                        <input type="text">
-                        <button>Set status</button>
+                        Birthday:
+                        <input id="birthday_input" type="date">
+                        <button onclick="setBirthday()">Set birthday</button>
                     </div>
                     <div id="bio_block">
                         Bio:<br>
-                        <textarea id="bio_textarea"></textarea>
+                        <textarea id="bio_input"></textarea>
                         <br>
-                        <button>Set bio</button>
+                        <button onclick="setBio()">Set bio</button>
                     </div>
                 </div>
                 <hr>
@@ -49,5 +42,10 @@
                 </div>
             </div>
         </div>
+        <script src="scripts/mustache.min.js"></script>
+        <script src="scripts/markdownit.min.js"></script>
+        <script src="scripts/util.js"></script>
+        <script src="scripts/authUtil.js"></script>
+        <script src="scripts/profile.js"></script>
     </body>
 </html>
