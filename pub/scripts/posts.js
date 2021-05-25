@@ -19,7 +19,7 @@ var postTemplate = `
     </div>
     <div class="post_info">
         <div class="post_info_author">
-            <a href="user.html">{{username}}</a>
+            <a href="user.html?user_id={{user_id}}">{{username}}</a>
         </div>
         <div class="post_info_right">
             <div class="post_info_date">{{date}}</div>
@@ -30,7 +30,7 @@ var postTemplate = `
     </div>
 </div>
 {{/posts}}
-{{^posts}}No posts. No hope. No life.{{/posts}}
+{{^posts}}No posts.{{/posts}}
 `;
 
 var tagsToReplace = {

@@ -43,7 +43,8 @@ function getCommentsRouter(sqlPool) {
         }
         try {
             const query =
-                `SELECT comment_id, username, \`date\`, content, post FROM CommentsView WHERE post = ?`;
+                `SELECT comment_id, username, user_id, \`date\`, content, post
+                FROM CommentsView WHERE post = ?`;
             const params = [ parseInt(req.query.post_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
             // TODO: TODO

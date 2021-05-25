@@ -17,7 +17,7 @@ var postTemplate = `
 <hr>
 <div id="post_info">
     <div class="post_info_author">
-        <a href="user.html">{{username}}</a>
+        <a href="user.html?user_id={{user_id}}">{{username}}</a>
     </div>
     <div class="post_info_right">
         <div class="post_info_date">{{date}}</div>
@@ -33,7 +33,9 @@ var commTemplate = `
 <div class="comment_block">
     <div class="comment_content">{{{content}}}</div>
     <hr>
-    <div class="comment_author">{{username}}</div>
+    <div class="comment_author">
+        <a class=shy_link href="user.html?user_id={{user_id}}">{{username}}</a>
+    </div>
     <div class="comment_date">{{date}}</div>
 </div>
 {{/comments}}

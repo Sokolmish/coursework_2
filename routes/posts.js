@@ -76,7 +76,7 @@ function getPostsRouter(sqlPool) {
         }
         try {
             const query =
-                `SELECT post_id, username, \`date\`, title, content, votes
+                `SELECT post_id, user_id, username, \`date\`, title, content, votes
                 FROM PostsView LIMIT ? OFFSET ?`;
             const params = [ parseInt(req.query.count), parseInt(req.query.offset) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
@@ -118,7 +118,7 @@ function getPostsRouter(sqlPool) {
         }
         try {
             const query =
-                `SELECT post_id, username, \`date\`, title, content, votes
+                `SELECT post_id, user_id, username, \`date\`, title, content, votes
                 FROM PostsView WHERE post_id = ?`;
             const params = [ parseInt(req.query.post_id) ];
             const [postsRows, _1] = await sqlPool.promise().query(query, params);
