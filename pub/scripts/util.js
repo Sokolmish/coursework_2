@@ -39,3 +39,9 @@ function errCodeName(code) {
         default: return "???";
     }
 }
+
+function printCred() {
+    console.log(`user_id: ${getCookie("cw2_user_id")}`);
+    console.log(`access_token: ${getCookie("cw2_access_token")}`);
+    console.log(`refresh_token: ${getCookie("cw2_refresh_token")}`);
+}

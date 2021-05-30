@@ -19,65 +19,96 @@ import { checkAuth } from "./auth.js";
 function getFilesRouter(sqlPool) {
     var router = express.Router();
 
-    router.post('/upload', async (req, res) => {
-        // TODO: check fields
-        // TODO: auth
+    const typesExts = {
+        "image/png": "png",
+        "image/jpeg": "jpg",
+        "image/gif": "gif",
+        "image/webp": "webp",
+        "image/svg+xml": "svg"
+    };
 
-        if (!req.files || Object.keys(req.files).length === 0) {
-            return res.status(400).send({
-                success: false,
-                err_code: ApiErrCodes.WRONG_REQUEST,
-                err: "No files were uploaded"
-            });
-        }
+    async function processFile(file) {
+        const fileExt = typesExts[file.mimetype];
+        const tmpDir = "/tmp/cw2_uploads/";
+        const tmpFile = await mktemp.createFile(`${tmpDir}iXXXXXXXX.${fileExt}`);
+        const tmpFilename = tmpFile.substr(tmpDir.length);
+        await file.mv(tmpFile);
 
-        const typesExts = {
-            "image/png": "png",
-            "image/jpeg": "jpg",
-            "image/gif": "gif",
-            "image/webp": "webp",
-            "image/svg+xml": "svg"
-        };
-        if (!req.files.image.mimetype in typesExts) {
-            return res.status(400).send({
-                success: false,
-                err_code: ApiErrCodes.SERVER_ERR,
-                err: "Such MIME type is not allowed"
-            });
-        }
-        const fileExt = typesExts[req.files.image.mimetype];
-        
-        try {
-            const tmpDir = "/tmp/cw2_uploads/";
-            const tmpFile = await mktemp.createFile(`${tmpDir}iXXXXXXXXXXXXXXXX.${fileExt}`);
-            const tmpFilename = tmpFile.substr(tmpDir.length);
-            await req.files.image.mv(tmpFile);
-
+        await imagemin([ tmpFile ], {
+            destination: '/app/storage',
+            plugins: [
+                imageminPngquant(),
+                imageminJpegtran(),
+                imageminSvgo(),
+                imageminGifsicle()
+            ]
+        });
+        if ([ "image/jpeg", "image/gif" ].includes(file.mimetype)) {
             await imagemin([ tmpFile ], {
                 destination: '/app/storage',
                 plugins: [
-                    imageminPngquant(),
                     imageminJpegtran(),
-                    imageminSvgo(),
-                    imageminGifsicle()
+                    imageminGifsicle(),
+                    imageminWebp()
                 ]
             });
+        }
+        await fs.unlink(tmpFile);
+        return tmpFilename;
+    }
 
-            const toWebpTypes = [ "image/jpeg", "image/gif" ];
-            if (toWebpTypes.includes(req.files.image.mimetype)) {
-                await imagemin([ tmpFile ], {
-                    destination: '/app/storage',
-                    plugins: [
-                        imageminJpegtran(),
-                        imageminGifsicle(),
-                        imageminWebp()
-                    ]
-                });
+    router.post('/upload', async (req, res) => {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "token" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (!Number.isInteger(parseInt(req.body.user_id)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+
+        if (!req.files || Object.keys(req.files).length === 0 || !req.files.image)
+            return res.status(400).json({
+                success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "No files were uploaded"
+            });
+        if (!req.files.image.mimetype in typesExts)
+            return res.status(400).json({
+                success: false, err_code: ApiErrCodes.SERVER_ERR, err: "Such MIME type is not allowed"
+            });
+
+        try {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
+            var filename = await processFile(req.files.image);
+            return res.json({ success: true, filename: filename });
+        }
+        catch (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
+        }
+    });
 
-            await fs.unlink(tmpFile);
+    router.post('/set_avatar', async (req, res) => {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "token" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (!Number.isInteger(parseInt(req.body.user_id)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
 
-            return res.status(500).json({ success: true, filename: tmpFilename });
+        if (!req.files || Object.keys(req.files).length === 0 || !req.files.image)
+            return res.status(400).json({
+                success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "No files were uploaded"
+            });
+        if (!req.files.image.mimetype in typesExts)
+            return res.status(400).json({
+                success: false, err_code: ApiErrCodes.SERVER_ERR, err: "Such MIME type is not allowed"
+            });
+
+        try {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+            }
+            var filename = await processFile(req.files.image);
+            const query = `UPDATE Users SET avatar = ? WHERE user_id = ?`;
+            const params = [ filename, parseInt(req.body.user_id) ];
+            await sqlPool.promise().query(query, params);
+            return res.json({ success: true, filename: filename });
         }
         catch (err) {
             console.error(err);

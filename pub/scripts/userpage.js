@@ -7,6 +7,7 @@ var userTemplate = `
     <li>Birthday: {{birthday}}</li>
     <li>Bio: {{bio}}</li>
 </ul>
+<img class="user_avatar_profile" src="storage/{{avatar}}"/>
 `;
 
 function formatDate(date) {

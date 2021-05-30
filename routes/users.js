@@ -19,7 +19,7 @@ function getUsersRouter(sqlPool) {
 
         try {
             const query =
-                `SELECT username, date_reg, birthday, bio FROM Users WHERE user_id = ?`;
+                `SELECT username, date_reg, birthday, bio, avatar FROM Users WHERE user_id = ?`;
             const params = [ parseInt(req.query.user_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
             // TODO: TODO

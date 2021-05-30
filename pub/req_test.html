@@ -17,7 +17,10 @@
                     <input type="text" id="dest" value="api/auth">
                     <h4>Params:</h4>
                     <div id="input"></div>
+                    <input id="image_input" type="file"/>
+                    <br>
                     <button onclick="doRequest()">Send</button>
+                    <button onclick="doWithFile()">Send file</button>
                     <div id="response_summary" style="border: 1px solid black;"></div>
                     <div id="response_block">
                         <h4>Response:</h4>

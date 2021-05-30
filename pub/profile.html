@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <title>Profile</title>
         <link rel="stylesheet" href="styles/common.css">
+        <link rel="stylesheet" href="styles/users.css">
     </head>
     <body>
         <div id="main_wrapper">
@@ -23,6 +24,11 @@
                         Birthday:
                         <input id="birthday_input" type="date">
                         <button onclick="setBirthday()">Set birthday</button>
+                    </div>
+                    <div id="avatar_block">
+                        Avatar:
+                        <input id="avatar_input" type="file" accept="image/png,image/jpeg,image/gif,image/webp,image/svg+xml">
+                        <button onclick="setAvatar()">Set avatar</button>
                     </div>
                     <div id="bio_block">
                         Bio:<br>

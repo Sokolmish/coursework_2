@@ -7,6 +7,7 @@ var userTemplate = `
     <li>Birthday: {{birthday}}</li>
     <li>Bio: {{bio}}</li>
 </ul>
+<img class="user_avatar_profile" src="storage/{{avatar}}"/>
 `;
 
 function formatDate(date) {
@@ -120,6 +121,49 @@ async function setBio(triedRefresh = false) {
                 await reauthorize(); // Possible redirect to auth
                 console.log("Second attempt to set bio");
                 setBio(true);
+            }
+            else {
+                console.log("Access denied at second try. Redirecting to auth...");
+                window.location.replace(`/auth.html?ret_to=${window.location}`);
+            }
+        }
+        else {
+            console.error(res);
+            alert("Error " + errCodeName(res.err_code));
+        }
+    }
+}
+
+async function setAvatar(triedRefresh = false) {
+    if (!preCheckAuth()) {
+        await reauthorize(); // Possible redirect to auth
+    }
+
+    // TODO: constraints
+
+    var formData = new FormData();
+    formData.append("user_id", getCookie("cw2_user_id"));
+    formData.append("token", getCookie("cw2_access_token"));
+    var file = window.avatar_input.files[0];
+    formData.append("image", file, file.name);
+
+    var rawRes = await fetch("/api/files/set_avatar", {
+        method: 'POST',
+        body: formData
+    });
+
+    var res = await rawRes.json();
+    if (res.success) {
+        console.log("Avatar successfully set");
+        window.location.reload();
+    }
+    else {
+        if (res.err_code === 5) { // Access denied
+            if (!triedRefresh) {
+                console.log("Access denied, reauthorization");
+                await reauthorize(); // Possible redirect to auth
+                console.log("Second attempt to set avatar");
+                setAvatar(true);
             }
             else {
                 console.log("Access denied at second try. Redirecting to auth...");
