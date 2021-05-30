@@ -59,26 +59,19 @@ function getAuthRouter(sqlPool) {
     // API: sign up
     router.post("/signup", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "email", "username", "passwd" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         // TODO: verify
         try {
             if (await isUserExists(req.body.username)) {
-                res.json({
-                    success: false,
-                    err_code: ApiErrCodes.ALREADY_EXISTS,
-                    err: "Username already exists"
+                return res.status(400).json({
+                    success: false, err_code: ApiErrCodes.ALREADY_EXISTS, err: "Username already exists"
                 });
-                return;
             }
             if (await isEmailExists(req.body.email)) {
-                res.json({
-                    success: false,
-                    err_code: ApiErrCodes.ALREADY_EXISTS,
-                    err: "Email already exists"
+                return res.status(400).json({
+                    success: false, err_code: ApiErrCodes.ALREADY_EXISTS, err: "Email already exists"
                 });
-                return;
             }
             const saltHex = crypto.randomBytes(32).toString("hex");
             const pwdHash =
@@ -86,27 +79,25 @@ function getAuthRouter(sqlPool) {
             const query = "CALL CreateUser(?, ?, UNHEX(?), UNHEX(?))";
             const params = [ req.body.username, req.body.email, pwdHash.toString("hex"), saltHex ];
             await sqlPool.promise().query(query, params);
-            res.json({ success: true });
+            return res.json({ success: true });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     // API: sign in
     router.post("/signin", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "email", "passwd" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         // TODO: verify
         try {
             if (!await isEmailExists(req.body.email)) {
-                res.json({
+                return res.status(400).json({
                     success: false, err_code: ApiErrCodes.NOT_EXISTS, err: "User doesn't exists"
                 });
-                return;
             }
             const query = "SELECT user_id, email, passwd, salt FROM UsersAuthView WHERE email = ?";
             const [rows, _] = await sqlPool.promise().query(query, [ req.body.email ]);
@@ -116,11 +107,11 @@ function getAuthRouter(sqlPool) {
             const pwdHashGiven =
                 crypto.pbkdf2Sync(req.body.passwd, saltHex, PBKDF2_ITERS, PBKDF2_LENGTH, "sha256");
             if (pwdHashGiven.length != pwdHashStored.length) {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
             else if (crypto.timingSafeEqual(pwdHashGiven, pwdHashStored)) {
                 const tokens = await authorizeUser(userId);
-                res.json({
+                return res.json({
                     success: true,
                     user_id: userId,
                     access_token: tokens.accessToken.toString("base64"),
@@ -128,20 +119,19 @@ function getAuthRouter(sqlPool) {
                 });
             }
             else {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     // API: refresh
     router.post("/refresh", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "user_id", "refresh_token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         // TODO: verify
         try {
@@ -149,91 +139,76 @@ function getAuthRouter(sqlPool) {
                 "FROM AuthSessions WHERE user_id = ?";
             const [rows, _] = await sqlPool.promise().query(query, [ req.body.user_id ]);
             if (rows.length == 0) {
-                res.json({ success: false, err_code: ApiErrCodes.NOT_EXISTS });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.NOT_EXISTS });
             }
             const storedToken = Buffer.from(rows[0].refresh_token, "hex");
             const givenToken = Buffer.from(req.body.refresh_token, "base64");
             const tokenTime = (new Date()).getTime() - rows[0].time_grant.getTime();
             if (storedToken.length != givenToken.length) {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
             else if (!crypto.timingSafeEqual(storedToken, givenToken)) {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
             else if (tokenTime > REFRESH_EXPIRE) {
-                res.json({ success: false, err_code: ApiErrCodes.EXPIRED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.EXPIRED });
             }
             else {
                 const tokens = await authorizeUser(req.body.user_id);
-                res.json({
+                return res.json({
                     success: true,
                     user_id: req.body.user_id,
                     access_token: tokens.accessToken.toString("base64"),
                     refresh_token: tokens.refreshToken.toString("base64")
                 });
-                return;
             }
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     // API: logout
     router.post("/logout", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         if (!Number.isInteger(parseInt(req.body.user_id))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
         }
         try {
             if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
                 deauthorizeUser(req.body.user_id);
-                res.json({ success: true });
-                return;
+                return res.json({ success: true });
             }
             else {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     // API: verify
     router.post("/verify", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         if (!Number.isInteger(parseInt(req.body.user_id))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
         }
         try {
-            if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
-                res.json({ success: true });
-                return;
-            }
-            else {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
-            }
+            if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token))
+                return res.json({ success: true });
+            else
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 

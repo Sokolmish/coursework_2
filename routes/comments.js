@@ -9,37 +9,32 @@ function getCommentsRouter(sqlPool) {
 
     router.post("/create", async (req, res) => {
         if (!checkFieldsNonEmpty(req.body, [ "author", "post", "content", "token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         if (!Number.isInteger(parseInt(req.body.author) || !Number.isInteger(parseInt(req.body.post)))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
         }
         try {
             if (!await checkAuth(sqlPool, req.body.author, req.body.token)) {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
             const query = "CALL CreateComment(?, ?, ?)";
             const params = [ req.body.author, req.body.post, req.body.content ];
             await sqlPool.promise().query(query, params);
-            res.json({ success: true });
+            return res.json({ success: true });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     router.get("/get_comments", async (req, res) => {
         if (!checkFieldsNonEmpty(req.query, [ "post_id" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
         if (!Number.isInteger(parseInt(req.query.post_id))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
         }
         try {
             const query =
@@ -48,7 +43,7 @@ function getCommentsRouter(sqlPool) {
             const params = [ parseInt(req.query.post_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
             // TODO: TODO
-            res.json({
+            return res.json({
                 success: true,
                 count: rows.length,
                 comments: rows
@@ -56,7 +51,7 @@ function getCommentsRouter(sqlPool) {
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 

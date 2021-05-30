@@ -30,7 +30,7 @@ function getFilesRouter(sqlPool) {
     async function processFile(file) {
         const fileExt = typesExts[file.mimetype];
         const tmpDir = "/tmp/cw2_uploads/";
-        const tmpFile = await mktemp.createFile(`${tmpDir}iXXXXXXXX.${fileExt}`);
+        const tmpFile = await mktemp.createFile(`${tmpDir}iXXXXXXXX.${fileExt}`); // TODO: not unique
         const tmpFilename = tmpFile.substr(tmpDir.length);
         await file.mv(tmpFile);
 
@@ -73,9 +73,9 @@ function getFilesRouter(sqlPool) {
             });
 
         try {
-            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token))
                 return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-            }
+
             var filename = await processFile(req.files.image);
             return res.json({ success: true, filename: filename });
         }
@@ -101,9 +101,9 @@ function getFilesRouter(sqlPool) {
             });
 
         try {
-            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token))
                 return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-            }
+
             var filename = await processFile(req.files.image);
             const query = `UPDATE Users SET avatar = ? WHERE user_id = ?`;
             const params = [ filename, parseInt(req.body.user_id) ];

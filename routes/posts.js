@@ -8,40 +8,26 @@ function getPostsRouter(sqlPool) {
     var router = express.Router();
 
     router.post("/create", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "title", "content", "token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
-        }
-        if (!Number.isInteger(parseInt(req.body.user_id))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
-        }
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "title", "content", "token" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (!Number.isInteger(parseInt(req.body.user_id)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
 
         // Tags checking
-        if (!Array.isArray(req.body.tags)) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "No tags" });
-            return;
-        }
-        if (req.body.tags.length > 6) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "More than 7 tags" });
-            return;
-        }
+        if (!Array.isArray(req.body.tags))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "No tags" });
+        if (req.body.tags.length > 6)
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "More than 7 tags" });
         for (var tag of req.body.tags) {
-            if (!(typeof tag === 'string' || tag instanceof String)) {
-                res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-                return;
-            }
-            if (tag.search(/^[0-9a-z_]{2,30}$/) == -1) {
-                res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-                return;
-            }
+            if (!(typeof tag === 'string' || tag instanceof String))
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+            if (tag.search(/^[0-9a-z_]{2,30}$/) == -1)
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
         }
-        // TODO: tags length in unicode
 
         try {
             if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
-                res.json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-                return;
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
             }
 
             // Tags
@@ -57,23 +43,20 @@ function getPostsRouter(sqlPool) {
             const params1 = [ req.body.user_id, req.body.title, req.body.content, tagsStr ];
             await sqlPool.promise().query(query1, params1);
 
-            res.json({ success: true });
+            return res.json({ success: true });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     router.get("/list", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.query, [ "offset", "count" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
-        }
-        if (!Number.isInteger(parseInt(req.query.offset)) || !Number.isInteger(parseInt(req.query.count))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "NaN" });
-            return;
-        }
+        if (!checkFieldsNonEmpty(req.query, [ "offset", "count" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (!Number.isInteger(parseInt(req.query.offset)) || !Number.isInteger(parseInt(req.query.count)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "NaN" });
+
         try {
             const query =
                 `SELECT post_id, user_id, username, \`date\`, title, content, votes
@@ -95,7 +78,7 @@ function getPostsRouter(sqlPool) {
                     .map(x => x.tagname);
             }
 
-            res.json({
+            return res.json({
                 success: true,
                 count: rows.length,
                 posts: rows
@@ -103,19 +86,16 @@ function getPostsRouter(sqlPool) {
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     router.get("/get_post", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.query, [ "post_id" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
-        }
-        if (!Number.isInteger(parseInt(req.query.post_id))) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-            return;
-        }
+        if (!checkFieldsNonEmpty(req.query, [ "post_id" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (!Number.isInteger(parseInt(req.query.post_id)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+
         try {
             const query =
                 `SELECT post_id, user_id, username, \`date\`, title, content, votes
@@ -123,10 +103,9 @@ function getPostsRouter(sqlPool) {
             const params = [ parseInt(req.query.post_id) ];
             const [postsRows, _1] = await sqlPool.promise().query(query, params);
             if (postsRows.length === 0) {
-                res.json({
+                return res.status(400).json({
                     success: false, err_code: ApiErrCodes.NOT_EXISTS, err: "Post doesn't exists"
                 });
-                return;
             }
 
             // Tags
@@ -136,42 +115,35 @@ function getPostsRouter(sqlPool) {
 
             var resPost = postsRows[0];
             resPost.tags = tagsRows.map(x => x.tagname);
-            res.json({
+            return res.json({
                 success: true,
                 post: resPost
             });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
     router.post("/vote", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "post_id", "token" ])) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
-        }
-        console.log(req.body.is_up);
-        if (req.body.is_up !== true && req.body.is_up !== false) {
-            res.json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-            return;
-        }
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "post_id", "token" ]))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+        if (req.body.is_up !== true && req.body.is_up !== false)
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
+
         // TODO: validate
-        
         // TODO: authorize
-        
+
         try {
             const query =`CALL DoVote(?, ?, ?)`;
             const params = [ parseInt(req.body.user_id), parseInt(req.body.post_id), req.body.is_up ];
             await sqlPool.promise().query(query, params);
-            res.json({
-                success: true
-            });
+            return res.json({ success: true });
         }
         catch (err) {
             console.error(err);
-            res.json({ success: false, err_code: ApiErrCodes.SERVER_ERR, err: err });
+            return res.status(500).json({ success: false, err_code: ApiErrCodes.SERVER_ERR });
         }
     });
 
