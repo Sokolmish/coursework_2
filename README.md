@@ -4,11 +4,12 @@ This is the coursework for course "Databases".
 
 ## Quick start
 
-Run the following script:
-
-
-To start application execute following commands:
-
+1. Run the following script:
+```bash
+./setup.sh
+```
+2. Change default passwords in the `mysql_secret.env` file.
+3. To start application execute following commands:
 ```bash
 docker-compose build
 docker-compose up
@@ -17,6 +18,8 @@ docker-compose up
 Server will run on port 8091. It is specified in `docker-compose.yml` file.
 
 After launching the forum will be avaivable on http://localhost:8091.
+
+PhpMyAdmin page will be avaivable on http://localhost:8091/phpmyadmin/.
 
 ## Docker
 
