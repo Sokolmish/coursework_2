@@ -5,18 +5,23 @@ import http from "http";
 import express from "express";
 import bodyParser from "body-parser"
 import compression from "compression";
-import mysql from "mysql2"
+import mysql from "mysql2";
+import fileUpload from "express-fileupload";
 
 import { getAuthRouter } from "./routes/auth.js"
 import { getPostsRouter } from "./routes/posts.js"
 import { getCommentsRouter } from "./routes/comments.js"
 import { getUsersRouter } from "./routes/users.js"
+import { getFilesRouter } from "./routes/files.js"
 
 const app = express();
 const server = http.createServer(app);
 
 app.use(bodyParser.json())
 app.use(compression());
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024, files: 5 }
+}));
 
 var sqlPool = mysql.createPool({
     connectionLimit: 5,
@@ -31,6 +36,7 @@ app.use("/api/auth", getAuthRouter(sqlPool));
 app.use("/api/posts", getPostsRouter(sqlPool));
 app.use("/api/comments", getCommentsRouter(sqlPool));
 app.use("/api/users", getUsersRouter(sqlPool));
+app.use("/api/files", getFilesRouter(sqlPool));
 
 // Default routes for GET and POST requests
 app.route("*")

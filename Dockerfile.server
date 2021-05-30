@@ -9,5 +9,7 @@ RUN npm install
 ENV TZ=Europe/Moscow
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN mkdir -p /tmp/cw2_uploads/
+
 COPY server.js .
 COPY routes/ ./routes
