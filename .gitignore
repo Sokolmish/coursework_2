@@ -1,1 +1,2 @@
-mysql_secret.env
+/mysql_secret.env
+/user_storage

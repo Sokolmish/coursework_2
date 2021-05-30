@@ -22,6 +22,7 @@ services:
         command: "node server.js"
         volumes:
             - ./pub:/app/pub
+            - ./user_storage:/app/storage
         environment:
             MYSQL_HOST: cw2_database
             MYSQL_DATABASE: cwork2_db
@@ -48,6 +49,7 @@ services:
             - 8091:80
         volumes:
             - ./pub:/app/pub
+            - ./user_storage:/app/storage
         depends_on:
             - cw2_server
             - cw2_phpmyadmin

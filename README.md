@@ -4,13 +4,9 @@ This is the coursework for course "Databases".
 
 ## Quick start
 
-Create file `mysql_secret.env` with following content:
+Run the following script:
 
-```
-MYSQL_ROOT_PASSWORD=<root password>
-MYSQL_USER=cw2_user
-MYSQL_PASSWORD=<user password>
-```
+
 To start application execute following commands:
 
 ```bash
