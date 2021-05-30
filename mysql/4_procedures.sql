@@ -1,7 +1,5 @@
 DELIMITER //
 
--- TODO: transactions?
-
 CREATE PROCEDURE CreateUser (
     iusername varchar(32),
     iemail varchar(320),

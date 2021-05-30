@@ -18,7 +18,10 @@ function getUsersRouter(sqlPool) {
                 `SELECT username, date_reg, birthday, bio, avatar FROM Users WHERE user_id = ?`;
             const params = [ parseInt(req.query.user_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
-            // TODO: TODO
+
+            if (rows.length != 1)
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.NOT_EXISTS });
+
             return res.json({
                 success: true,
                 user: rows[0]

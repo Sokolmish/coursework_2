@@ -38,7 +38,7 @@ async function loadUserData(user_id) {
         res.user.birthday = "-";
 
     if (res.user.bio)
-        res.user.bio = res.user.bio; // TODO: Markdown
+        res.user.bio = res.user.bio;
     else
         res.user.bio = "-";
 

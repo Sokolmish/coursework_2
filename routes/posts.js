@@ -26,16 +26,15 @@ function getPostsRouter(sqlPool) {
         }
 
         try {
-            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token)) {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token))
                 return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
-            }
 
             // Tags
-            const query2 = "INSERT IGNORE INTO Tags(tagname) VALUES ?"; // TODO: ignore?
+            const query2 = "INSERT IGNORE INTO Tags(tagname) VALUES ?";
             const params2 = [ req.body.tags.map(x => [ x ]) ];
             await sqlPool.promise().query(query2, params2);
 
-            var tagsStr = req.body.tags.join(','); // TODO: escaping
+            var tagsStr = req.body.tags.join(',');
             // .map(x => `('${x}')`)
             console.log(tagsStr);
 
@@ -133,9 +132,11 @@ function getPostsRouter(sqlPool) {
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
 
         // TODO: validate
-        // TODO: authorize
 
         try {
+            if (!await checkAuth(sqlPool, req.body.user_id, req.body.token))
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });
+
             const query =`CALL DoVote(?, ?, ?)`;
             const params = [ parseInt(req.body.user_id), parseInt(req.body.post_id), req.body.is_up ];
             await sqlPool.promise().query(query, params);

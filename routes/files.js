@@ -29,9 +29,10 @@ function getFilesRouter(sqlPool) {
 
     async function processFile(file) {
         const fileExt = typesExts[file.mimetype];
-        const tmpDir = "/tmp/cw2_uploads/";
-        const tmpFile = await mktemp.createFile(`${tmpDir}iXXXXXXXX.${fileExt}`); // TODO: not unique
-        const tmpFilename = tmpFile.substr(tmpDir.length);
+        const fileDir = "/app/storage/";
+        const uniqFile = await mktemp.createFile(`${fileDir}iXXXXXXXX.${fileExt}`);
+        const filename = uniqFile.substr(fileDir.length);
+        const tmpFile = "/tmp/cw2_uploads/" + filename;
         await file.mv(tmpFile);
 
         await imagemin([ tmpFile ], {
@@ -54,7 +55,7 @@ function getFilesRouter(sqlPool) {
             });
         }
         await fs.unlink(tmpFile);
-        return tmpFilename;
+        return filename;
     }
 
     router.post('/upload', async (req, res) => {

@@ -37,12 +37,14 @@ function getCommentsRouter(sqlPool) {
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
         }
         try {
-            const query =
-                `SELECT comment_id, username, user_id, \`date\`, content, post
+            const query = `SELECT comment_id, username, user_id, \`date\`, content, post
                 FROM CommentsView WHERE post = ?`;
             const params = [ parseInt(req.query.post_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
-            // TODO: TODO
+
+            if (rows.length != 1)
+                return res.status(400).json({ success: false, err_code: ApiErrCodes.NOT_EXISTS });
+
             return res.json({
                 success: true,
                 count: rows.length,

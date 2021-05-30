@@ -58,9 +58,9 @@ function getAuthRouter(sqlPool) {
 
     // API: sign up
     router.post("/signup", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "email", "username", "passwd" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "email", "username", "passwd" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-        }
+
         // TODO: verify
         try {
             if (await isUserExists(req.body.username)) {
@@ -89,10 +89,9 @@ function getAuthRouter(sqlPool) {
 
     // API: sign in
     router.post("/signin", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "email", "passwd" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "email", "passwd" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-        }
-        // TODO: verify
+
         try {
             if (!await isEmailExists(req.body.email)) {
                 return res.status(400).json({
@@ -130,10 +129,11 @@ function getAuthRouter(sqlPool) {
 
     // API: refresh
     router.post("/refresh", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "refresh_token" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "refresh_token" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-        }
-        // TODO: verify
+        if (!Number.isInteger(parseInt(req.body.user_id)))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
+
         try {
             const query = "SELECT user_id, access_token, refresh_token, time_grant " +
                 "FROM AuthSessions WHERE user_id = ?";
@@ -171,12 +171,11 @@ function getAuthRouter(sqlPool) {
 
     // API: logout
     router.post("/logout", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-        }
-        if (!Number.isInteger(parseInt(req.body.user_id))) {
+        if (!Number.isInteger(parseInt(req.body.user_id)))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-        }
+
         try {
             if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token)) {
                 deauthorizeUser(req.body.user_id);
@@ -194,12 +193,11 @@ function getAuthRouter(sqlPool) {
 
     // API: verify
     router.post("/verify", async (req, res) => {
-        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ])) {
+        if (!checkFieldsNonEmpty(req.body, [ "user_id", "access_token" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
-        }
-        if (!Number.isInteger(parseInt(req.body.user_id))) {
+        if (!Number.isInteger(parseInt(req.body.user_id)))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Id is NaN" });
-        }
+
         try {
             if (await checkAuth(sqlPool, req.body.user_id, req.body.access_token))
                 return res.json({ success: true });

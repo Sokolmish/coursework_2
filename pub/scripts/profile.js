@@ -38,7 +38,7 @@ async function loadUserData(user_id) {
         res.user.birthday = "-";
 
     if (res.user.bio)
-        res.user.bio = res.user.bio; // TODO: Markdown
+        res.user.bio = res.user.bio;
     else
         res.user.bio = "-";
 
@@ -138,8 +138,6 @@ async function setAvatar(triedRefresh = false) {
     if (!preCheckAuth()) {
         await reauthorize(); // Possible redirect to auth
     }
-
-    // TODO: constraints
 
     var formData = new FormData();
     formData.append("user_id", getCookie("cw2_user_id"));

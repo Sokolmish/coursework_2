@@ -34,7 +34,7 @@ function removeTag(name) {
             break;
         }
     }
-    displayTags(); // TODO: somewhere else
+    displayTags();
 }
 
 function displayTags() {
