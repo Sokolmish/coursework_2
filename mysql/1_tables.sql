@@ -4,7 +4,7 @@ CREATE TABLE Users (
     `email` varchar(320) NOT NULL UNIQUE,
     `date_reg` datetime NOT NULL,
     `birthday` date,
-    `avatar` varchar(32) NOT NULL DEFAULT 'default_avatar.png',
+    `avatar` varchar(32) DEFAULT 'default_avatar.png',
     `bio` varchar(512),
     CONSTRAINT CHECK (`username` <> ''),
     CONSTRAINT CHECK (`email` <> '')
@@ -63,7 +63,8 @@ CREATE TABLE PostVotes (
     `user_id` int NOT NULL,
     `is_up` boolean NOT NULL,
     FOREIGN KEY(`post_id`) REFERENCES Posts(`post_id`) ON DELETE CASCADE,
-    FOREIGN KEY(`user_id`) REFERENCES Users(`user_id`) ON DELETE CASCADE
+    FOREIGN KEY(`user_id`) REFERENCES Users(`user_id`) ON DELETE CASCADE,
+    UNIQUE KEY(`post_id`, `user_id`)
 );
 
 CREATE TABLE TagsAssign (

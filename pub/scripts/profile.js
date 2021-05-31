@@ -37,10 +37,10 @@ async function loadUserData(user_id) {
     else
         res.user.birthday = "-";
 
-    if (res.user.bio)
-        res.user.bio = res.user.bio;
-    else
+    if (!res.user.bio)
         res.user.bio = "-";
+    if (!res.user.avatar)
+        res.user.avatar = "default_avatar.png";
 
     window.user_info_block.innerHTML = Mustache.render(userTemplate, res.user);
 }
@@ -142,7 +142,12 @@ async function setAvatar(triedRefresh = false) {
     var formData = new FormData();
     formData.append("user_id", getCookie("cw2_user_id"));
     formData.append("token", getCookie("cw2_access_token"));
+
     var file = window.avatar_input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+        alert("File is too large");
+        return;
+    }
     formData.append("image", file, file.name);
 
     var rawRes = await fetch("/api/files/set_avatar", {

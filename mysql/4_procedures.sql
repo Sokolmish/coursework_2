@@ -60,22 +60,6 @@ CREATE PROCEDURE DoVote (
     iis_up boolean
 )
 BEGIN
-    IF EXISTS (
-        SELECT `p_vote_id` FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id
-    ) THEN
-        IF (SELECT `is_up` FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id) THEN
-            UPDATE Posts SET `upvotes` = `upvotes` - 1 WHERE `post_id` = ipost_id;
-        ELSE
-            UPDATE Posts SET `downvotes` = `downvotes` - 1 WHERE `post_id` = ipost_id;
-        END IF;
-        DELETE FROM PostVotes WHERE `post_id` = ipost_id AND `user_id` = iuser_id;
-        -- TODO: Update instead of delete
-    END IF;
-    INSERT INTO PostVotes(`user_id`, `post_id`, `is_up`)
-        VALUES(iuser_id, ipost_id, iis_up);
-    IF iis_up THEN
-        UPDATE Posts SET `upvotes` = `upvotes` + 1 WHERE `post_id` = ipost_id;
-    ELSE
-        UPDATE Posts SET `downvotes` = `downvotes` + 1 WHERE `post_id` = ipost_id;
-    END IF;
+    INSERT INTO PostVotes(`user_id`, `post_id`, `is_up`) VALUES (iuser_id, ipost_id, iis_up)
+        ON DUPLICATE KEY UPDATE is_up = iis_up;
 END//

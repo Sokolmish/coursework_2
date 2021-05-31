@@ -37,10 +37,10 @@ async function loadUserData(user_id) {
     else
         res.user.birthday = "-";
 
-    if (res.user.bio)
-        res.user.bio = res.user.bio;
-    else
+    if (!res.user.bio)
         res.user.bio = "-";
+    if (!res.user.avatar)
+        res.user.avatar = "default_avatar.png";
 
     window.user_info_block.innerHTML = Mustache.render(userTemplate, res.user);
 }

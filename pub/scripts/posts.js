@@ -58,11 +58,15 @@ function formatDate(date) {
 }
 
 var md = window.markdownit();
+var curOffset = parseInt((new URLSearchParams(window.location.search)).get('offset'));
+if (!curOffset)
+    curOffset = 0;
+var postsOnPage = 25;
 
 async function loadPosts() {
     console.log("Loading posts...");
-    var offset = 0;
-    var maxCnt = 100;
+    var offset = curOffset;
+    var maxCnt = postsOnPage;
     var rawRes = await fetch(`/api/posts/list?offset=${offset}&count=${maxCnt}`);
     var res = await rawRes.json();
     if (!res.success) {
@@ -124,3 +128,13 @@ async function vote(post_id, is_up, triedRefresh = false) {
 }
 
 loadPosts();
+
+function nextPage() {
+    var newOffset = curOffset + postsOnPage;
+    document.location.href = `/index.html?offset=${newOffset}`;
+}
+
+function prevPage() {
+    var newOffset = curOffset - postsOnPage;
+    document.location.href = `/index.html?offset=${newOffset >= 0 ? newOffset : 0}`;
+}

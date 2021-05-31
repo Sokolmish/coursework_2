@@ -1,13 +1,34 @@
 'use strict'
 
-import express from "express"
-import crypto from "crypto"
-import { checkFieldsNonEmpty, ApiErrCodes } from "./util.js"
+import express from "express";
+import crypto from "crypto";
+import { checkFieldsNonEmpty, ApiErrCodes } from "./util.js";
 
 const PBKDF2_ITERS = 1e5;
 const PBKDF2_LENGTH = 32;
 const ACCESS_EXPIRE = 180 * 6e4; // minutes to milliseconds
 const REFRESH_EXPIRE = (24 * 30) * 3.6e6; // hours to milliseconds
+
+function checkLogin(login) {
+    if (login === "" || login.length < 5)
+        return false;
+    else
+        return true;
+}
+function checkPasswd(passwd) {
+    if (passwd === "" || passwd.length < 8)
+        return false;
+    else
+        return true;
+}
+function checkEmail(email) {
+    if (email === "" || email.length < 8)
+        return false;
+    else {
+        var re = /^[^\s@]+@[^\s@]+$/;
+        return re.test(email);
+    }
+}
 
 async function checkAuth(sqlPool, user_id, token) {
     const query = "SELECT user_id, access_token, time_grant FROM AuthSessions WHERE user_id = ?";
@@ -61,7 +82,13 @@ function getAuthRouter(sqlPool) {
         if (!checkFieldsNonEmpty(req.body, [ "email", "username", "passwd" ]))
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
 
-        // TODO: verify
+        if (!checkEmail(req.body.email))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Bad email" });
+        if (!checkLogin(req.body.username))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Bad username" });
+        if (!checkPasswd(req.body.passwd))
+            return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST, err: "Bad password" });
+
         try {
             if (await isUserExists(req.body.username)) {
                 return res.status(400).json({

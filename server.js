@@ -8,11 +8,11 @@ import compression from "compression";
 import mysql from "mysql2";
 import fileUpload from "express-fileupload";
 
-import { getAuthRouter } from "./routes/auth.js"
-import { getPostsRouter } from "./routes/posts.js"
-import { getCommentsRouter } from "./routes/comments.js"
-import { getUsersRouter } from "./routes/users.js"
-import { getFilesRouter } from "./routes/files.js"
+import { getAuthRouter } from "./routes/auth.js";
+import { getPostsRouter } from "./routes/posts.js";
+import { getCommentsRouter } from "./routes/comments.js";
+import { getUsersRouter } from "./routes/users.js";
+import { getFilesRouter } from "./routes/files.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -20,7 +20,7 @@ const server = http.createServer(app);
 app.use(bodyParser.json())
 app.use(compression());
 app.use(fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024, files: 5 }
+    limits: { fileSize: 5 * 1024 * 1024, files: 5 }
 }));
 
 var sqlPool = mysql.createPool({

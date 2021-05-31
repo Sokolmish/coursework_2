@@ -1,7 +1,5 @@
 'use strict'
 
-// TODO: constraints
-
 function checkLogin(login) {
     if (login === "" || login.length < 5)
         return false;
@@ -16,7 +14,7 @@ function checkPasswd(passwd) {
         return true;
 }
 
-async function checkEmail(email) {
+function checkEmail(email) {
     if (email === "" || email.length < 8)
         return false;
     else {
