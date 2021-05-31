@@ -131,8 +131,6 @@ function getPostsRouter(sqlPool) {
         if (req.body.is_up !== true && req.body.is_up !== false)
             return res.status(400).json({ success: false, err_code: ApiErrCodes.WRONG_REQUEST });
 
-        // TODO: validate
-
         try {
             if (!await checkAuth(sqlPool, req.body.user_id, req.body.token))
                 return res.status(400).json({ success: false, err_code: ApiErrCodes.ACCESS_DENIED });

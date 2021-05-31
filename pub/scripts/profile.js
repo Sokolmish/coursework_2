@@ -47,7 +47,6 @@ async function loadUserData(user_id) {
 
 loadUserData(getCookie("cw2_user_id"));
 
-// TODO: constraints
 
 async function setBirthday(triedRefresh = false) {
     if (!preCheckAuth()) {
@@ -95,8 +94,6 @@ async function setBio(triedRefresh = false) {
     if (!preCheckAuth()) {
         await reauthorize(); // Possible redirect to auth
     }
-
-    // TODO: constraints
 
     var rawRes = await fetch('/api/users/set_bio', {
         method: 'POST',

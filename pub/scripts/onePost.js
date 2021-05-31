@@ -95,7 +95,7 @@ async function sendComment(triedRefresh = false) {
     }
 
     var content = window.comm_edit_field.value;
-    // TODO: validate
+
     var rawRes = await fetch('/api/comments/create', {
         method: 'POST',
         headers: {

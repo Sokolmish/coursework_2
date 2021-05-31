@@ -42,9 +42,6 @@ function getCommentsRouter(sqlPool) {
             const params = [ parseInt(req.query.post_id) ];
             const [rows, _] = await sqlPool.promise().query(query, params);
 
-            if (rows.length != 1)
-                return res.status(400).json({ success: false, err_code: ApiErrCodes.NOT_EXISTS });
-
             return res.json({
                 success: true,
                 count: rows.length,

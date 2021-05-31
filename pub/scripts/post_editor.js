@@ -42,7 +42,6 @@ function displayTags() {
 }
 
 function tagClick() {
-    // TODO: verify tag name
     addTag(window.tag_input.value.trim().toLowerCase());
     displayTags();
 }
@@ -97,7 +96,6 @@ async function createPost(triedRefresh = false) {
         await reauthorize(); // Possible redirect to auth
     }
 
-    // TODO: constraints
     if (tags.length > 6) {
         console.error("Too many tags (More than 7)");
         alert("Too many tags (More than 7)");

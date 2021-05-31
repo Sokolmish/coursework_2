@@ -7,10 +7,10 @@ CREATE VIEW VotesView AS
     FROM `PostVotes` GROUP BY post_id;
 
 CREATE VIEW PostsView AS
-    SELECT p.post_id, u.user_id, u.username, p.`date`, p.title, p.content, v.votes
+    SELECT p.post_id, u.user_id, u.username, p.`date`, p.title, p.content, IFNULL(v.votes, 0)
     FROM `Posts` AS p
     INNER JOIN `Users` AS u ON p.`author` = u.`user_id`
-    INNER JOIN `VotesView` AS v ON p.`post_id` = v.`post_id`
+    LEFT JOIN `VotesView` AS v ON p.`post_id` = v.`post_id`
     ORDER BY p.`date` DESC;
 
 CREATE VIEW CommentsView AS

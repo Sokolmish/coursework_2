@@ -17,9 +17,9 @@ docker-compose up
 
 Server will run on port 8091. It is specified in `docker-compose.yml` file.
 
-After launching the forum will be avaivable on http://localhost:8091.
+After launching the forum will be available on http://localhost:8091.
 
-PhpMyAdmin page will be avaivable on http://localhost:8091/phpmyadmin/.
+PhpMyAdmin page will be available on http://localhost:8091/phpmyadmin/.
 
 ## Docker
 
